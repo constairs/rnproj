@@ -5,6 +5,7 @@ import{
 } from 'redux-saga/effects';
 import { push } from 'connected-react-router';
 import {
+  FETCH_USERS_REQUEST,
   USER_LOGIN_REQUEST,
   USER_CREATE_REQUEST,
   USER_LOGOUT_REQUEST,
@@ -15,6 +16,8 @@ import {
   RESET_PASSWORD_REQUEST
 } from './types';
 import {
+  fetchUsersSuccessed,
+  fetchUsersFailed,
   userLoginSuccessed,
   userLoginFailed,
   userCreateSuccessed,
@@ -44,6 +47,19 @@ import {
   updatePassword,
   resetPassword
 } from '../../firebase/userFunctions';
+import {
+  addUserToDb,
+  fetchUsers
+} from '../../firebase/databaseFunctions';
+
+export function* fetchUsersSaga() {
+  try {
+    const fetchResponse = yield call(fetchUsers);
+    yield put(fetchUsersSuccessed(fetchResponse));
+  } catch (error) {
+    yield put(fetchUsersFailed(error.message));
+  }
+}
 
 export function* userLoginSaga(action) {
   try {
@@ -59,6 +75,7 @@ export function* userCreateSaga(action) {
   try {
     const createResponse = yield call(createUserWithEmailAndPassword, ...action.payload);
     yield put(userCreateSuccessed(createResponse));
+    yield call(addUserToDb, action.payload[0]);
     yield call(sendVerification);
     yield put(push('/user'));
   } catch (error) {
@@ -127,6 +144,7 @@ export function* resetPasswordSaga({ payload }) {
 }
 
 export function* userSagas() {
+  yield takeLatest(FETCH_USERS_REQUEST, fetchUsersSaga);
   yield takeLatest(USER_LOGIN_REQUEST, userLoginSaga);
   yield takeLatest(USER_CREATE_REQUEST, userCreateSaga);
   yield takeLatest(USER_LOGOUT_REQUEST, userLogoutSaga);

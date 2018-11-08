@@ -5,12 +5,11 @@ import {
   TextInput,
   Text,
   View,
-  Button,
   TouchableOpacity
 } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { userCreateRequest } from '../../redux/users/actions';
-
+import { BackBtn } from '../../components/BackBtn';
 
 class Page extends React.Component {
   state = {
@@ -35,6 +34,7 @@ class Page extends React.Component {
     const { logged, email } = this.props.user;
     return (
       <View style={styles.container}>
+        <BackBtn />
         <TextInput
           style={styles.textinput}
           onChangeText={(text) => this.setState({userLogin: text})}

@@ -1,10 +1,8 @@
 import React from 'react';
 import {
   StyleSheet,
-  TextInput,
   Text,
   View,
-  Button,
   Image,
   TouchableOpacity
 } from 'react-native';

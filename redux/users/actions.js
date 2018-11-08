@@ -1,5 +1,17 @@
 import * as TYPES from './types';
 
+export const fetchUsersRequest = () => ({
+  type: TYPES.FETCH_USERS_REQUEST
+});
+export const fetchUsersSuccessed = fetchResponse => ({
+  type: TYPES.FETCH_USERS_SUCCESSED,
+  payload: fetchResponse
+});
+export const fetchUsersFailed = error => ({
+  type: TYPES.FETCH_USERS_FAILED,
+  payload: error
+});
+
 export const userLoginRequest = userData => ({
   type: TYPES.USER_LOGIN_REQUEST,
   payload: userData

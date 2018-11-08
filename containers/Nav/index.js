@@ -9,6 +9,12 @@ const N = () => {
       <Link to="/">
         <Text style={styles.navLink}>Home</Text>
       </Link>
+      <Link to="/issues/new">
+        <Text style={styles.navLink}>New Issue</Text>
+      </Link>
+      <Link to="/my_issues">
+        <Text style={styles.navLink}>My Issues</Text>
+      </Link>
     </View>
   );
 }

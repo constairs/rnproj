@@ -1,4 +1,4 @@
-import { assoc, assocPath, pipe, values, set } from 'ramda';
+import { assoc, assocPath, pipe, values, keys, set, over, lensProp } from 'ramda';
 import * as TYPES from './types';
 import { createReducer } from '../utils/reducerUtils';
 
@@ -9,7 +9,20 @@ export const initState = {
   displayName: '',
   username: '',
   logged: false,
+  users: []
 };
+
+const usersLens = lensProp('users');
+
+const fetchUsersRequest = () => assoc('userFetching', true);
+const fetchUsersSuccessed = fetchResponse => pipe(
+  assoc('userFetching', false),
+  set(usersLens, keys(fetchResponse)),
+);
+const fetchUsersFailed = error => pipe(
+  assoc('userFetching', false),
+  assoc('error', error)
+);
 
 const userLoginRequest = () => assoc('userFetching', true);
 const userLoginSuccessed = loginResponse => pipe(
@@ -95,6 +108,10 @@ const resetPasswordFailed = error => pipe(
 );
 
 const handlers = {
+  [TYPES.FETCH_USERS_REQUEST]: fetchUsersRequest,
+  [TYPES.FETCH_USERS_SUCCESSED]: fetchUsersSuccessed,
+  [TYPES.FETCH_USERS_FAILED]: fetchUsersFailed,
+
   [TYPES.USER_LOGIN_REQUEST]: userLoginRequest,
   [TYPES.USER_LOGIN_SUCCESSED]: userLoginSuccessed,
   [TYPES.USER_LOGIN_FAILED]: userLoginFailed,

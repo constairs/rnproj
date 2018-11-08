@@ -10,6 +10,8 @@ import { EmailUpdate } from './containers/EmailUpdate';
 import { PasswordReset } from './containers/PasswordReset';
 import { PasswordUpdate } from './containers/PasswordUpdate';
 import { ProfileUpdate } from './containers/ProfileUpdate';
+import { NewIssuePage } from './containers/NewIssuePage';
+import { MyIssuesPage } from './containers/MyIssuesPage';
 import { history } from './redux/store';
 
 
@@ -24,6 +26,8 @@ export const Navigation = () => (
       <Route exact path="/passwordUpdate" component={PasswordUpdate} />
       <Route exact path="/emailUpdate" component={EmailUpdate} />
       <Route exact path="/profileUpdate" component={ProfileUpdate} />
+      <Route exact path="/issues/new" component={NewIssuePage} />
+      <Route exact path="/my_issues" component={MyIssuesPage} />
     </View>
   </ConnectedRouter>
 );

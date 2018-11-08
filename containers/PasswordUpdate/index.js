@@ -5,13 +5,9 @@ import {
   TextInput,
   Text,
   View,
-  Button,
   TouchableOpacity
 } from 'react-native';
-import { Link } from "react-router-native";
 import { bindActionCreators } from 'redux';
-import { UserProfile } from '../../components/UserProfile';
-import { Nav } from '../Nav';
 import { BackBtn } from '../../components/BackBtn';
 import {
   updatePasswordRequest
