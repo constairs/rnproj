@@ -12,6 +12,7 @@ import { PasswordUpdate } from './containers/PasswordUpdate';
 import { ProfileUpdate } from './containers/ProfileUpdate';
 import { NewIssuePage } from './containers/NewIssuePage';
 import { MyIssuesPage } from './containers/MyIssuesPage';
+import { IssuePage } from './containers/IssuePage';
 import { history } from './redux/store';
 
 
@@ -28,6 +29,7 @@ export const Navigation = () => (
       <Route exact path="/profileUpdate" component={ProfileUpdate} />
       <Route exact path="/issues/new" component={NewIssuePage} />
       <Route exact path="/my_issues" component={MyIssuesPage} />
+      <Route path="/my_issues/issue" component={IssuePage} />
     </View>
   </ConnectedRouter>
 );
@@ -36,8 +38,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'rgb(40, 44, 52)',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 40
+    flexDirection: 'column',
   }
 });

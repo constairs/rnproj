@@ -12,10 +12,10 @@ import {
 
 import {
   createIssue,
-  // deleteIssueData,
+  deleteIssue,
   // editIssue,
   fetchIssues,
-  // getIssue,
+  getIssue,
   // answerIssue
 } from '../../firebase/databaseFunctions';
 
@@ -30,12 +30,12 @@ import {
   createIssueFailed,
   fetchIssuesSuccessed,
   fetchIssuesFailed,
-  // deleteIssueSuccessed,
-  // deleteIssueFailed,
+  deleteIssueSuccessed,
+  deleteIssueFailed,
   // editIssueSuccessed,
   // editIssueFailed,
-  // getIssueSuccessed,
-  // getIssueFailed,
+  getIssueSuccessed,
+  getIssueFailed,
   // downloadAttachmentSuccessed,
   // downloadAttachmentFailed,
   // issuesAnswerSuccessed,
@@ -91,15 +91,15 @@ export function* createIssueSaga(action) {
   }
 }
 
-// export function* deleteIssueSaga(action) {
-//   try {
-//     const deleteResponse = yield call(deleteIssueData, action.payload);
-//     yield put(deleteIssueSuccessed(deleteResponse));
-//     yield put(push('/my_issues'));
-//   } catch (error) {
-//     yield put(deleteIssueFailed(error.message));
-//   }
-// }
+export function* deleteIssueSaga(action) {
+  try {
+    const deleteResponse = yield call(deleteIssue, action.payload);
+    yield put(deleteIssueSuccessed(deleteResponse));
+    yield put(push('/my_issues'));
+  } catch (error) {
+    yield put(deleteIssueFailed(error.message));
+  }
+}
 
 // export function* editIssueSaga(action) {
 //   try {
@@ -153,15 +153,19 @@ export function* fetchIssuesSaga(action) {
   }
 }
 
-// export function* getIssueSaga(action) {
-//   try {
-//     const issue = yield call(getIssue, action.payload);
-//     yield put(getIssueSuccessed(issue));
-//     yield put(push('/issues/issue/'));
-//   } catch (error) {
-//     yield put(getIssueFailed(error.message));
-//   }
-// }
+export function* getIssueSaga(action) {
+  try {
+    const issue = yield call(getIssue, action.payload);
+    yield put(getIssueSuccessed(issue));
+    if (action.payload.forOwner) {
+      yield put(push(`/my_issues/issue/${action.payload.issueId}`));
+    } else {
+      yield put(push(`/issues/issue/${action.payload.issueId}`));
+    }
+  } catch (error) {
+    yield put(getIssueFailed(error.message));
+  }
+}
 
 // export function* downloadAttachmentSaga(action) {
 //   try {
@@ -186,8 +190,8 @@ export function* fetchIssuesSaga(action) {
 
 export function* issuesSagas() {
   yield takeLatest(CREATE_ISSUE_REQUEST, createIssueSaga);
-  // yield takeLatest(DELETE_ISSUE_REQUEST, deleteIssueSaga);
-  // yield takeLatest(GET_ISSUE_REQUEST, getIssueSaga);
+  yield takeLatest(DELETE_ISSUE_REQUEST, deleteIssueSaga);
+  yield takeLatest(GET_ISSUE_REQUEST, getIssueSaga);
   // yield takeLatest(EDIT_ISSUE_REQUEST, editIssueSaga);
   yield takeLatest(FETCH_ISSUES_REQUEST, fetchIssuesSaga);
   // yield takeLatest(DOWNLOAD_ATTACHMENT_REQUEST, downloadAttachmentSaga);

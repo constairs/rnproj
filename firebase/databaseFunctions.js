@@ -88,24 +88,24 @@ export function answerIssue(answerData) {
   .catch((error) => {return error});
 }
 
-export function deleteIssueData(issueData) {
+export function deleteIssue(issueData) {
   const filter = issueData.user.split('@')[0];
 
   if(issueData.forOwner) {
-    const ref = firebase.database().ref(`/users/${filter}/myIssues`);
+    const ref = firebase.database().ref(`/users/${filter}/myIssues/${issueData.issueId}`);
     return new Promise((resolve, reject) => {
-      ref.once('value')
-      .then((snapshot) => {
-        resolve(snapshot.val());
+      ref.remove()
+      .then(() => {
+        resolve(issueData.issueId);
       })
       .catch((error) => reject(error));
     });
   } else {
     return new Promise((resolve, reject) => {
-      const ref = firebase.database().ref(`/users/${filter}/issues`);
-      ref.once('value')
-      .then((snapshot) => {
-        resolve(snapshot.val());
+      const ref = firebase.database().ref(`/users/${filter}/issues/${issueData.issueId}`);
+      ref.remove()
+      .then(() => {
+        resolve(issueData.issueId);
       })
       .catch((error) => reject(error));
     });

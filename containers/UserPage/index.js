@@ -28,44 +28,44 @@ class Page extends React.Component {
     } = this.props.user;
     const img = {uri: photoURL || 'https://www.gstatic.com/mobilesdk/160503_mobilesdk/logo/2x/firebase_28dp.png'};
     return (
-      <View style={styles.container}>
-        <Nav />
-        <UserProfile {...this.props.user} onLogout={() => {this.props.userLogoutRequest()}} />
-        <View style={styles.buttons}>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => {history.push('/profileUpdate')}}
-          >
-            <Text style={styles.buttonText}>
-              Update Profile
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => {this.props.userDeleteRequest()}}
-          >
-            <Text style={styles.buttonText}>
-              Delete Profile
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => {history.push('/emailUpdate')}}
-          >
-            <Text style={styles.buttonText}>
-              Update Email
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => {history.push('/passwordUpdate')}}
-          >
-            <Text style={styles.buttonText}>
-              Update Password
-            </Text>
-          </TouchableOpacity>
+        <View style={styles.container}>
+          <UserProfile {...this.props.user} onLogout={() => {this.props.userLogoutRequest()}} />
+          <View style={styles.buttons}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => {history.push('/profileUpdate')}}
+            >
+              <Text style={styles.buttonText}>
+                Update Profile
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => {this.props.userDeleteRequest()}}
+            >
+              <Text style={styles.buttonText}>
+                Delete Profile
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => {history.push('/emailUpdate')}}
+            >
+              <Text style={styles.buttonText}>
+                Update Email
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => {history.push('/passwordUpdate')}}
+            >
+              <Text style={styles.buttonText}>
+                Update Password
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <Nav />
         </View>
-      </View>
     );
   }
 }

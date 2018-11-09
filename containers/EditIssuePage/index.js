@@ -11,7 +11,7 @@ import {
 import { bindActionCreators } from 'redux';
 import { Nav } from '../Nav';
 import {
-  createIssueRequest
+  editIssueRequest
 } from '../../redux/issues/actions';
 import {
   fetchUsersRequest
@@ -44,10 +44,7 @@ class Page extends React.Component {
       issueFiles: []
     };
 
-    this.props.createIssueRequest({
-      user: this.props.users.email,
-      createIssueData
-    });
+    this.props.editIssueRequest();
   }
 
   renderPickerItems() {
@@ -183,10 +180,10 @@ const styles = StyleSheet.create({
   },
 });
 
-export const NewIssuePage = connect(
+export const EditIssuePage = connect(
   state => ({ users: state.users }),
   dispatch => ({
-    createIssueRequest: bindActionCreators(createIssueRequest, dispatch),
+    editIssueRequest: bindActionCreators(editIssueRequest, dispatch),
     fetchUsersRequest: bindActionCreators(fetchUsersRequest, dispatch)
   })
 )(Page);

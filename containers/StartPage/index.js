@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { Link } from "react-router-native";
 import { UserProfile } from '../../components/UserProfile';
+import { Nav } from '../Nav';
 import { bindActionCreators } from 'redux';
 import { userLogoutRequest } from '../../redux/users/actions'
 
@@ -11,12 +12,19 @@ class Page extends React.Component {
     const { logged, email } = this.props.user;
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>
-          App
-        </Text>
+        <View style={styles.header}>
+          <Text style={styles.title}>
+            App
+          </Text>
+        </View>
         {
           logged ?
-          <UserProfile {...this.props.user} onLogout={() => {this.props.userLogoutRequest()}} />
+          <View style={styles.main}>
+            <UserProfile
+              {...this.props.user}
+              onLogout={() => {this.props.userLogoutRequest()}} 
+            />
+          </View>
           :
           <View style={styles.buttons}>
             <TouchableOpacity
@@ -35,6 +43,9 @@ class Page extends React.Component {
             </TouchableOpacity>
           </View>
         }
+        <View style={styles.menu}>
+          <Nav />
+        </View>
       </View>
     );
   }
@@ -44,14 +55,25 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'rgb(40, 44, 52)',
+    flexDirection: 'column'
+  },
+  header: {
+    flex: .8,
+    backgroundColor: '#61dafb',
+    paddingTop: 20,
     alignItems: 'center',
-    justifyContent: 'center',
-    padding: 40
+    justifyContent: 'center'
+  },
+  main: {
+    flex: 10,
+  },
+  menu: {
+    flex: .8,
   },
   title: {
     fontSize: 28,
     color: '#fff',
-    marginBottom: 20
+    backgroundColor: '#61dafb',
   },
   button: {
     backgroundColor: '#61dafb',
@@ -80,7 +102,7 @@ const styles = StyleSheet.create({
   buttons: {
     flex: 1,
     flexDirection: 'row'
-  },
+  }
 });
 
 export const StartPage = connect(

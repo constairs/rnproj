@@ -4,12 +4,15 @@ import {
   StyleSheet,
   Text,
   View,
-  FlatList
+  TouchableOpacity
 } from 'react-native';
 import { bindActionCreators } from 'redux';
+import { Link } from "react-router-native";
 import { Nav } from '../Nav';
+import { IssueList } from '../../components/IssueList';
 import {
-  fetchIssuesRequest
+  fetchIssuesRequest,
+  getIssueRequest
 } from '../../redux/issues/actions';
 import {
   fetchUsersRequest
@@ -18,7 +21,15 @@ import { history } from '../../redux/store';
 
 class Page extends React.Component {
   componentDidMount() {
-    this.props.fetchIssuesRequest({ user: this.props.users.email, forOwner: true })
+    this.props.fetchIssuesRequest({ user: this.props.users.email, forOwner: true });
+  }
+
+  getIssue = (issueId) => {
+    this.props.getIssueRequest({
+      user: this.props.users.email,
+      issueId,
+      forOwner: true
+    });
   }
 
   render() {
@@ -27,11 +38,20 @@ class Page extends React.Component {
 
     return (
       <View style={styles.container}>
-        <Nav />
-        <FlatList
-          data={issues}
-          renderItem={({item}) => <Text key={item.issueId}>{item.title}</Text>}
-        />
+        <View style={styles.header}>
+          <Text style={styles.title}>
+            My issues
+          </Text>
+        </View>
+        <View style={styles.main}>
+          <IssueList
+            onGetIssue={this.getIssue}
+            issues={issues}
+          />
+        </View>
+        <View style={styles.menu}>
+          <Nav />
+        </View>
       </View>
     );
   }
@@ -41,9 +61,26 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'rgb(40, 44, 52)',
+    flexDirection: 'column',
+    width: '100%'
+  },
+  header: {
+    flex: .8,
+    backgroundColor: '#61dafb',
+    paddingTop: 20,
     alignItems: 'center',
-    justifyContent: 'center',
-    padding: 40
+    justifyContent: 'center'
+  },
+  main: {
+    flex: 10,
+  },
+  menu: {
+    flex: .8,
+  },
+  title: {
+    fontSize: 28,
+    color: '#fff',
+    backgroundColor: '#61dafb',
   },
   btn: {
     backgroundColor: '#61dafb',
@@ -55,7 +92,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#fff',
     fontSize: 16
-  }
+  },
 });
 
 export const MyIssuesPage = connect(
@@ -65,6 +102,7 @@ export const MyIssuesPage = connect(
   }),
   dispatch => ({
     fetchIssuesRequest: bindActionCreators(fetchIssuesRequest, dispatch),
+    getIssueRequest: bindActionCreators(getIssueRequest, dispatch),
     fetchUsersRequest: bindActionCreators(fetchUsersRequest, dispatch)
   })
 )(Page);
