@@ -5,12 +5,8 @@ import { Link } from "react-router-native";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 class N extends React.Component {
-  state = {
-    pressStatus: false
-  }
-
   render () {
-    const { pressStatus } = this.state;
+    const { logged } = this.props.user;
     return(
       <View style={styles.nav}>
         <View style={styles.navItem}>
@@ -21,16 +17,33 @@ class N extends React.Component {
             </Text>
           </Link>
         </View>
-        <View style={styles.navItem}>
-          <Link to="/issues/new">
-            <Text style={styles.navLink}>New</Text>
-          </Link>
-        </View>
-        <View style={styles.navItem}>
-          <Link to="/my_issues">
-            <Text style={styles.navLink}>My</Text>
-          </Link>
-        </View>
+        {
+          logged ? (
+          <View style={styles.navItem}>
+            <Link to="/issues/new">
+              <Text style={styles.navLink}>New</Text>
+            </Link>
+          </View>
+          ) : null
+        }
+        {
+          logged ? (
+          <View style={styles.navItem}>
+            <Link to="/issues">
+              <Text style={styles.navLink}>Issues</Text>
+            </Link>
+          </View>
+          ) : null
+        }
+        {
+          logged ? (
+          <View style={styles.navItem}>
+            <Link to="/my_issues">
+              <Text style={styles.navLink}>My</Text>
+            </Link>
+          </View>
+          ) : null
+        }
       </View>
     );
   }

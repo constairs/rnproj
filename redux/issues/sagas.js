@@ -13,10 +13,10 @@ import {
 import {
   createIssue,
   deleteIssue,
-  // editIssue,
+  editIssue,
   fetchIssues,
   getIssue,
-  // answerIssue
+  answerIssue
 } from '../../firebase/databaseFunctions';
 
 // import {
@@ -32,14 +32,14 @@ import {
   fetchIssuesFailed,
   deleteIssueSuccessed,
   deleteIssueFailed,
-  // editIssueSuccessed,
-  // editIssueFailed,
+  editIssueSuccessed,
+  editIssueFailed,
   getIssueSuccessed,
   getIssueFailed,
-  // downloadAttachmentSuccessed,
-  // downloadAttachmentFailed,
-  // issuesAnswerSuccessed,
-  // issuesAnswerFailed,
+  downloadAttachmentSuccessed,
+  downloadAttachmentFailed,
+  issuesAnswerSuccessed,
+  issuesAnswerFailed,
 } from './actions';
 
 export function* createIssueSaga(action) {
@@ -101,48 +101,48 @@ export function* deleteIssueSaga(action) {
   }
 }
 
-// export function* editIssueSaga(action) {
-//   try {
-//     if (action.payload.editIssueData.issueFiles.length > 0) {
-//       const newFiles = action.payload.editIssueData.issueFiles.filter(file => !file.downloadUrl);
+export function* editIssueSaga(action) {
+  try {
+    if (action.payload.editIssueData.issueFiles.length > 0) {
+      const newFiles = action.payload.editIssueData.issueFiles.filter(file => !file.downloadUrl);
 
-//       const filesLinks = yield call(uploadFiles, newFiles);
-//       const files = newFiles.map((file, i) => ({
-//         type: file.type,
-//         size: file.size,
-//         name: file.name,
-//         lastModified: file.lastModified,
-//         downloadUrl: filesLinks[i]
-//       }));
+      const filesLinks = yield call(uploadFiles, newFiles);
+      const files = newFiles.map((file, i) => ({
+        type: file.type,
+        size: file.size,
+        name: file.name,
+        lastModified: file.lastModified,
+        downloadUrl: filesLinks[i]
+      }));
 
-//       const updatedFiles = [
-//         ...action.payload.editIssueData.issueFiles.filter(file => file.downloadUrl),
-//         ...files
-//       ];
-//       const issueWithFilesUpd = [
-//         action.payload.user,
-//         ...action.payload.editIssueData.issueData,
-//         updatedFiles,
-//       ];
+      const updatedFiles = [
+        ...action.payload.editIssueData.issueFiles.filter(file => file.downloadUrl),
+        ...files
+      ];
+      const issueWithFilesUpd = [
+        action.payload.user,
+        ...action.payload.editIssueData.issueData,
+        updatedFiles,
+      ];
 
-//       const updatedIssue = yield call(editIssue, ...issueWithFilesUpd);
-//       yield put(editIssueSuccessed(updatedIssue));
-//       yield put(push('/my_issues'));
-//     } else {
-//       const updatedIssue = yield call(
-//         editIssue,
-//         ...[
-//           action.payload.user,
-//           ...action.payload.editIssueData.issueData
-//         ]
-//       );
-//       yield put(editIssueSuccessed(updatedIssue));
-//       yield put(push('/my_issues'));
-//     }
-//   } catch (error) {
-//     yield put(editIssueFailed(error.message));
-//   }
-// }
+      const updatedIssue = yield call(editIssue, ...issueWithFilesUpd);
+      yield put(editIssueSuccessed(updatedIssue));
+      yield put(push('/my_issues'));
+    } else {
+      const updatedIssue = yield call(
+        editIssue,
+        ...[
+          action.payload.user,
+          ...action.payload.editIssueData.issueData
+        ]
+      );
+      yield put(editIssueSuccessed(updatedIssue));
+      yield put(push('/my_issues'));
+    }
+  } catch (error) {
+    yield put(editIssueFailed(error.message));
+  }
+}
 
 export function* fetchIssuesSaga(action) {
   try {
@@ -158,9 +158,9 @@ export function* getIssueSaga(action) {
     const issue = yield call(getIssue, action.payload);
     yield put(getIssueSuccessed(issue));
     if (action.payload.forOwner) {
-      yield put(push(`/my_issues/issue/${action.payload.issueId}`));
+      yield put(push(`/my_issues/issue`));
     } else {
-      yield put(push(`/issues/issue/${action.payload.issueId}`));
+      yield put(push(`/issues/issue`));
     }
   } catch (error) {
     yield put(getIssueFailed(error.message));
@@ -178,22 +178,22 @@ export function* getIssueSaga(action) {
 //   }
 // }
 
-// export function* issueAnswerSaga(action) {
-//   try {
-//     const res = yield call(answerIssue, action.payload);
-//     yield put(issuesAnswerSuccessed(res));
-//   } catch (error) {
-//     yield put(issuesAnswerFailed(error.message));
-//   }
-// }
+export function* issueAnswerSaga(action) {
+  try {
+    const res = yield call(answerIssue, action.payload);
+    yield put(issuesAnswerSuccessed(res));
+  } catch (error) {
+    yield put(issuesAnswerFailed(error.message));
+  }
+}
 
 
 export function* issuesSagas() {
   yield takeLatest(CREATE_ISSUE_REQUEST, createIssueSaga);
   yield takeLatest(DELETE_ISSUE_REQUEST, deleteIssueSaga);
   yield takeLatest(GET_ISSUE_REQUEST, getIssueSaga);
-  // yield takeLatest(EDIT_ISSUE_REQUEST, editIssueSaga);
+  yield takeLatest(EDIT_ISSUE_REQUEST, editIssueSaga);
   yield takeLatest(FETCH_ISSUES_REQUEST, fetchIssuesSaga);
   // yield takeLatest(DOWNLOAD_ATTACHMENT_REQUEST, downloadAttachmentSaga);
-  // yield takeLatest(ISSUE_ANSWER_REQUEST, issueAnswerSaga);
+  yield takeLatest(ISSUE_ANSWER_REQUEST, issueAnswerSaga);
 }

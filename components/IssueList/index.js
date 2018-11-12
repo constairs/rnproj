@@ -54,6 +54,7 @@ const styles = StyleSheet.create({
     width: 250,
     justifyContent: 'center',
     padding: 10,
+    marginBottom: 10
   },
   listItemText: {
     color: '#000'

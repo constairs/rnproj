@@ -9,7 +9,6 @@ import {
 import { bindActionCreators } from 'redux';
 import moment from 'moment';
 import { Nav } from '../Nav';
-import { BackBtn } from '../../components/BackBtn';
 import {
   fetchUsersRequest,
 } from '../../redux/users/actions';
@@ -18,11 +17,12 @@ import {
   deleteIssueRequest
 } from '../../redux/issues/actions';
 import { history } from '../../redux/store';
+import { theme } from '../../theme'
 
 class Page extends React.Component {
 
   editIssue = () => {
-    history.push(`edit${history.location}`);
+    history.push(`${history.location.pathname}/edit`);
   }
 
   deleteIssue = () => {
@@ -39,37 +39,42 @@ class Page extends React.Component {
     return (
       <View style={styles.container}>
         <View style={styles.header}>
-          <View style={styles.item1_3}>
-            <BackBtn />
-          </View>
-          <View>
-            <Text style={styles.title}>Issue</Text>
-          </View>
+          <Text style={styles.title}>Issue</Text>
         </View>
         <View style={styles.main}>
+          
           <View style={styles.issueBox}>
-            <Text style={styles.description}>
-              {
-                moment(currentIssue.createdAt).format('LLL')
-              }
-            </Text>
-            <Text style={styles.issueTitle}>
-              {currentIssue.title}
-            </Text>
-            <Text style={styles.description}>
-              {currentIssue.description}
-            </Text>
-            <TouchableOpacity onPress={this.editIssue}>
-              <Text>
-                Edit
+
+            <View style={styles.issueInfo}>
+              <Text style={styles.issueDate}>
+                {
+                  moment(currentIssue.createdAt).format('LLL')
+                }
               </Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={this.deleteIssue}>
-              <Text>
-                Delete
+              <Text style={styles.issueTitle}>
+                {currentIssue.title}
               </Text>
-            </TouchableOpacity>
+              <Text style={styles.text}>
+                {currentIssue.description}
+              </Text>
+            </View>
+            {
+              currentIssue.owner ===  this.props.users.email.split('@')[0] ?
+              (<View style={styles.buttons}>
+                 <TouchableOpacity style={styles.button} onPress={this.editIssue}>
+                  <Text style={styles.buttonText}>
+                    Edit
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.button} onPress={this.deleteIssue}>
+                  <Text style={styles.buttonText}>
+                    Delete
+                  </Text>
+                </TouchableOpacity>
+              </View>) : null
+            }
           </View>
+
         </View>
         <View style={styles.menu}>
           <Nav />
@@ -80,59 +85,7 @@ class Page extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'rgb(40, 44, 52)',
-    flexDirection: 'column'
-  },
-  header: {
-    flex: .8,
-    backgroundColor: '#61dafb',
-    paddingTop: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
-    position: 'relative'
-  },
-  item1_3: {
-    position: 'absolute',
-    top: 40,
-    left: 40
-  },
-  main: {
-    flex: 10,
-  },
-  menu: {
-    flex: .8,
-  },
-  title: {
-    fontSize: 28,
-    color: '#fff',
-    backgroundColor: '#61dafb',
-  },
-  btn: {
-    backgroundColor: '#61dafb',
-    borderRadius: 4,
-    padding: 10,
-    width: 200,
-  },
-  btnText: {
-    textAlign: 'center',
-    color: '#fff',
-    fontSize: 16
-  },
-  issueTitle: {
-    fontSize: 24,
-    color: '#fff',
-  },
-  description: {
-    fontSize: 16,
-    color: '#fff'
-  },
-  issueBox: {
-    flex: 0.9,
-    padding: 20,
-  }
+  ...theme
 });
 
 export const IssuePage = connect(

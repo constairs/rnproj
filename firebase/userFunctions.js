@@ -33,7 +33,6 @@ export function reAuth() {
   return new Promise((resolve, reject) => {
     const user = firebase.auth().currentUser;
     let credential;
-
     user.reauthenticateAndRetrieveDataWithCredential(credential).then(() => {
       resolve(user);
     }).catch((error) => {
@@ -52,15 +51,15 @@ export function logout() {
   });
 }
 
-export function updateProfile(profileName, profileImg) {
+export function updateProfile(userData) {
   return new Promise((resolve, reject) => {
     const user = firebase.auth().currentUser;
 
     user.updateProfile({
-      displayName: profileName,
-      photoURL: profileImg
+      displayName: userData.profileName,
+      photoURL: userData.profileUrl
     }).then(() => {
-      resolve({ profileName, profileImg });
+      resolve(userData);
     }).catch((error) => {
       reject(error);
     });
@@ -116,7 +115,15 @@ export function updatePassword(newPassword) {
     user.updatePassword(newPassword).then(() => {
       resolve('Password changed successufuly!');
     }).catch((error) => {
-      reject(error);
+      if (error.code === 'auth/requires-recent-login') {
+        reAuth()
+          .then(() => {
+            user.updatePassword(newPassword).then(() => resolve('Password changed successufuly!'));
+          })
+          .catch((err) => { reject(err); });
+      } else {
+        reject(error);
+      }
     });
   });
 }

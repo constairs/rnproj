@@ -18,6 +18,7 @@ import {
   fetchUsersRequest
 } from '../../redux/users/actions';
 import { history } from '../../redux/store';
+import { theme } from '../../theme';
 
 class Page extends React.Component {
   componentDidMount() {
@@ -58,41 +59,7 @@ class Page extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'rgb(40, 44, 52)',
-    flexDirection: 'column',
-    width: '100%'
-  },
-  header: {
-    flex: .8,
-    backgroundColor: '#61dafb',
-    paddingTop: 20,
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  main: {
-    flex: 10,
-  },
-  menu: {
-    flex: .8,
-  },
-  title: {
-    fontSize: 28,
-    color: '#fff',
-    backgroundColor: '#61dafb',
-  },
-  btn: {
-    backgroundColor: '#61dafb',
-    borderRadius: 4,
-    padding: 10,
-    width: 200,
-  },
-  btnText: {
-    textAlign: 'center',
-    color: '#fff',
-    fontSize: 16
-  },
+  ...theme
 });
 
 export const MyIssuesPage = connect(

@@ -2,46 +2,52 @@ import React from 'react';
 import { connect } from 'react-redux';
 import {
   StyleSheet,
-  TextInput,
   Text,
   View,
-  Picker,
   TouchableOpacity
 } from 'react-native';
 import { bindActionCreators } from 'redux';
+import { Link } from "react-router-native";
 import { Nav } from '../Nav';
+import { IssueList } from '../../components/IssueList';
 import {
-  createIssueRequest
+  fetchIssuesRequest,
+  getIssueRequest
 } from '../../redux/issues/actions';
 import {
   fetchUsersRequest
 } from '../../redux/users/actions';
 import { history } from '../../redux/store';
-import { IssueForm } from '../../components/IssueForm';
 import { theme } from '../../theme';
 
 class Page extends React.Component {
   componentDidMount() {
-    this.props.fetchUsersRequest()
+    this.props.fetchIssuesRequest({ user: this.props.users.email, forOwner: false });
   }
 
-  editIssue = (issueData) => {
-    this.props.createIssueRequest({
+  getIssue = (issueId) => {
+    this.props.getIssueRequest({
       user: this.props.users.email,
-      createIssueData: issueData
+      issueId,
+      forOwner: false
     });
   }
 
   render() {
+    const { issues } = this.props.issues;
+
     return (
       <View style={styles.container}>
         <View style={styles.header}>
           <Text style={styles.title}>
-            Create new issue
+            Issues
           </Text>
         </View>
         <View style={styles.main}>
-          <IssueForm users={this.props.users} onSubmitForm={this.editIssue} />
+          <IssueList
+            onGetIssue={this.getIssue}
+            issues={issues}
+          />
         </View>
         <View style={styles.menu}>
           <Nav />
@@ -55,11 +61,14 @@ const styles = StyleSheet.create({
   ...theme
 });
 
-export const NewIssuePage = connect(
-  state => ({ users: state.users }),
+export const IssuesPage = connect(
+  state => ({
+    users: state.users,
+    issues: state.issues,
+  }),
   dispatch => ({
-    createIssueRequest: bindActionCreators(createIssueRequest, dispatch),
-    fetchUsersRequest: bindActionCreators(fetchUsersRequest, dispatch),
-
+    fetchIssuesRequest: bindActionCreators(fetchIssuesRequest, dispatch),
+    getIssueRequest: bindActionCreators(getIssueRequest, dispatch),
+    fetchUsersRequest: bindActionCreators(fetchUsersRequest, dispatch)
   })
 )(Page);

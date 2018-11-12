@@ -25,6 +25,19 @@ export const userLoginFailed = error => ({
   payload: error
 });
 
+export const userReconnectRequest = () => ({
+  type: TYPES.USER_RECONNECT_REQUEST,
+  // payload: userData
+});
+export const userReconnectSuccessed = reconnectResponse => ({
+  type: TYPES.USER_RECONNECT_SUCCESSED,
+  payload: reconnectResponse
+});
+export const userReconnectFailed = error => ({
+  type: TYPES.USER_RECONNECT_FAILED,
+  payload: error
+});
+
 export const userLogoutRequest = () => ({
   type: TYPES.USER_LOGOUT_REQUEST
 });

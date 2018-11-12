@@ -73,6 +73,10 @@ const editIssueSuccessed = updatedIssue => pipe(
   over(issuesLens, map(issue => (issue.issueId === updatedIssue.issueId ? updatedIssue : issue))),
   assocPath(['notification', 'show'], true),
   assocPath(['notification', 'success'], `${updatedIssue.title} updated succesfully!`),
+  when(
+    equals(path(['currentIssue', 'issueId'], updatedIssue.issueId)),
+    assoc('currentIssue', updatedIssue)
+  ),
 );
 const editIssueFailed = error => pipe(
   assoc('issueFetching', false),

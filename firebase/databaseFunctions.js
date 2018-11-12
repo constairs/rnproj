@@ -4,25 +4,36 @@ import 'firebase/database';
 
 /* eslint-disable */
   import { app } from './index';
+import { now } from 'moment';
 /* eslint-disable */
 
 const database = firebase.database();
 
 export function addUserToDb(userEmail) {
 
-  const user = userEmail.split('@')[0];
+  const userId = userEmail.split('@')[0];
+
 
   const userData = {
+    userId,
     email: userEmail,
     issues: [],
   };
 
   return new Promise((resolve, reject) => {
-    firebase.database().ref('/users/' + user).set(userData)
+    firebase.database().ref('/users/' + userId).set(userData)
     .then(() => resolve())
     .catch((error) => reject(error));
   });
 }
+
+// export function updateUserDb(userData) {
+//   return new Promise((resolve, reject) => {
+//     firebase.database().ref('users/' + userData.userId).update(userData)
+//     .then(() => resolve(userData))
+//     .catch((error) => reject(error));
+//   });
+// }
 
 export function fetchUsers() {
   return new Promise((resolve, reject) => {

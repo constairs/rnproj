@@ -1,5 +1,4 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import {
   StyleSheet,
   TextInput,
@@ -8,42 +7,33 @@ import {
   Picker,
   TouchableOpacity
 } from 'react-native';
-import { bindActionCreators } from 'redux';
-import { Nav } from '../Nav';
-import {
-  editIssueRequest
-} from '../../redux/issues/actions';
-import {
-  fetchUsersRequest
-} from '../../redux/users/actions';
-import { history } from '../../redux/store';
 
 export class IssueForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      issueTitle: props.issue.title || '',
-      issueDescription: props.issue.description || '',
-      issueFor: props.issue.for || ''
+      issueTitle: props.title || '',
+      issueDescription: props.description || '',
+      issueFor: props.for || props.users.users[0]
     }
   }
 
   submitForm = (e) => {
     e.preventDefault();
 
-    const createIssueData = {
+    const issueData = {
       issueData: [
-        this.props.issue.issueId || `id${(+new Date()).toString(16)}`,
-        this.props.issue.createdAt || Date.now(),
+        this.props.issueId || `id${(+new Date()).toString(16)}`,
+        this.props.createdAt || Date.now(),
         this.state.issueTitle,
         this.state.issueDescription,
         this.state.issueFor,
-        this.props.issue.issueId ? Date.now() : null
+        this.props.issueId ? Date.now() : null
       ],
       issueFiles: []
     };
 
-    this.props.onSubmitForm(createIssueData);
+    this.props.onSubmitForm(issueData);
   }
 
   renderPickerItems() {
@@ -63,7 +53,6 @@ export class IssueForm extends React.Component {
     const {
       users
     } = this.props.users;
-
     const {
       issueTitle,
       issueDescription,
@@ -88,6 +77,7 @@ export class IssueForm extends React.Component {
           selectedValue={issueFor}
           style={styles.picker}
           value={issueFor}
+          itemStyle={styles.pickerItem}
           onValueChange={(itemValue, itemIndex) => this.setState({issueFor: itemValue})}>
           {this.renderPickerItems()}
         </Picker>
@@ -96,10 +86,48 @@ export class IssueForm extends React.Component {
           onPress={this.submitForm}
         >
           <Text style={styles.btnText}>
-            Create issue
+            { this.props.issueId ? 'Edit' : 'Create' } issue
           </Text>
         </TouchableOpacity>
       </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  form: {
+    height: 260
+  },
+  textinput: {
+    height: 40,
+    borderRadius: 4,
+    backgroundColor: '#f0f0f0',
+    padding: 4,
+    borderWidth: 1,
+    width: 200,
+    marginBottom: 20
+  },
+  picker: {
+    width: 200,
+    // backgroundColor: '#f0f0f0',
+    // borderRadius: 4,
+    // padding: 4,
+    // borderWidth: 1,
+    // marginBottom: 20,
+  },
+  pickerItem: {
+    // height: 40,
+    color: '#ffffff'
+  },
+  btn: {
+    backgroundColor: '#61dafb',
+    borderRadius: 4,
+    padding: 10,
+    width: 200,
+  },
+  btnText: {
+    textAlign: 'center',
+    color: '#fff',
+    fontSize: 16
+  },
+});

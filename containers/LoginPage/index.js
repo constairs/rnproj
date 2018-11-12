@@ -5,15 +5,16 @@ import {
   TextInput,
   Text,
   View,
-  TouchableOpacity
+  TouchableOpacity,
+  KeyboardAvoidingView
 } from 'react-native';
 import { bindActionCreators } from 'redux';
 import {
   userLoginRequest
 } from '../../redux/users/actions';
 import { history } from '../../redux/store';
-import { BackBtn } from '../../components/BackBtn';
-
+import { Nav } from '../Nav';
+import { theme } from '../../theme';
 
 class Page extends React.Component {
   state = {
@@ -38,68 +39,58 @@ class Page extends React.Component {
     const { logged, email } = this.props.user;
     return (
       <View style={styles.container}>
-        <BackBtn />
-        <TextInput
-          style={styles.textinput}
-          onChangeText={(text) => this.setState({userLogin: text})}
-          value={userLogin}
-          placeholder='enter email'
-          textContentType="emailAddress"
-        />
-        <TextInput
-          style={styles.textinput}
-          textContentType="password"
-          onChangeText={(text) => this.setState({userPassword: text})}
-          value={userPassword}
-          placeholder='enter password'
-        />
-        <TouchableOpacity onPress={() => {history.push('/passwordReset')}}>
-          <Text>
-            Forget password?
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.btn}
-          onPress={this.userLogin}
-          disabled={!userLogin && !userPassword}
-        >
-          <Text style={styles.btnText}>
+        <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
+        <View style={styles.header}>
+          <Text style={styles.title}>
             Login
           </Text>
-        </TouchableOpacity>
+        </View>
+        <View style={styles.main}>
+          <View style={styles.form}>
+            <TextInput
+              style={styles.textinput}
+              onChangeText={(text) => this.setState({userLogin: text})}
+              value={userLogin}
+              placeholder='enter email'
+              textContentType="emailAddress"
+              keyboardType="email-address"
+              autoCapitalize="none"
+            />
+            <TextInput
+              style={styles.textinput}
+              textContentType="password"
+              onChangeText={(text) => this.setState({userPassword: text})}
+              value={userPassword}
+              placeholder='enter password'
+              secureTextEntry
+            />
+            <TouchableOpacity style={styles.formLink} onPress={() => {history.push('/passwordReset')}}>
+              <Text style={styles.formLinkText}>
+                Forget password?
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.formBtn}
+              onPress={this.userLogin}
+              disabled={!userLogin && !userPassword}
+            >
+              <Text style={styles.formBtnText}>
+                Login
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        <View style={styles.menu}>
+          <Nav />
+        </View>
+        </KeyboardAvoidingView>
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'rgb(40, 44, 52)',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 40
-  },
-  textinput: {
-    height: 40,
-    borderRadius: 4,
-    backgroundColor: '#f0f0f0',
-    padding: 4,
-    borderWidth: 1,
-    width: 200,
-    marginBottom: 20
-  },
-  btn: {
-    backgroundColor: '#61dafb',
-    borderRadius: 4,
-    padding: 10,
-    width: 200,
-  },
-  btnText: {
-    textAlign: 'center',
-    color: '#fff',
-    fontSize: 16
-  }
+  ...theme
 });
 
 export const LoginPage = connect(

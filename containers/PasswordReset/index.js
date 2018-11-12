@@ -12,6 +12,7 @@ import { BackBtn } from '../../components/BackBtn';
 import {
   resetPaswordRequest
 } from '../../redux/users/actions';
+import { theme } from '../../theme';
 
 class Page extends React.Component {
   state = {
@@ -27,14 +28,16 @@ class Page extends React.Component {
           onChangeText={(text) => this.setState({email: text})}
           value={email}
           textContentType="emailAddress"
-          placeholder='enter email'
+          placeholder="enter email"
+          keyboardType="email-address"
+          autoCapitalize="none"
         />
         <TouchableOpacity
-          style={styles.btn}
+          style={styles.formBtn}
           onPress={() => {this.props.resetPaswordRequest(email)}}
           disabled={!email}
         >
-          <Text style={styles.btnText}>
+          <Text style={styles.formBtnText}>
             Reset password
           </Text>
         </TouchableOpacity>
@@ -44,33 +47,7 @@ class Page extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'rgb(40, 44, 52)',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 40
-  },
-  textinput: {
-    height: 40,
-    borderRadius: 4,
-    backgroundColor: '#f0f0f0',
-    padding: 4,
-    borderWidth: 1,
-    width: 200,
-    marginBottom: 20
-  },
-  btn: {
-    backgroundColor: '#61dafb',
-    borderRadius: 4,
-    padding: 10,
-    width: 200,
-  },
-  btnText: {
-    textAlign: 'center',
-    color: '#fff',
-    fontSize: 16
-  }
+  ...theme
 });
 
 export const PasswordReset = connect(

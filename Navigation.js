@@ -12,7 +12,9 @@ import { PasswordUpdate } from './containers/PasswordUpdate';
 import { ProfileUpdate } from './containers/ProfileUpdate';
 import { NewIssuePage } from './containers/NewIssuePage';
 import { MyIssuesPage } from './containers/MyIssuesPage';
+import { IssuesPage } from './containers/IssuesPage';
 import { IssuePage } from './containers/IssuePage';
+import { EditIssuePage } from './containers/EditIssuePage';
 import { history } from './redux/store';
 
 
@@ -28,8 +30,11 @@ export const Navigation = () => (
       <Route exact path="/emailUpdate" component={EmailUpdate} />
       <Route exact path="/profileUpdate" component={ProfileUpdate} />
       <Route exact path="/issues/new" component={NewIssuePage} />
+      <Route exact path="/issues" component={IssuesPage} />
       <Route exact path="/my_issues" component={MyIssuesPage} />
-      <Route path="/my_issues/issue" component={IssuePage} />
+      <Route exact path="/my_issues/issue/" component={IssuePage} />
+      <Route exact path="/my_issues/issue/edit" component={EditIssuePage} />
+      <Route exact path="/issues/issue" component={IssuePage} />
     </View>
   </ConnectedRouter>
 );

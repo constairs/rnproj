@@ -22,7 +22,7 @@ export class UserProfile extends React.Component {
             </View>
             <View style={styles.userInfo}>
               <Link to="/user">
-                <Text  style={styles.userTitle}>
+                <Text style={styles.userTitle}>
                   {displayName || email}
                 </Text>
               </Link>

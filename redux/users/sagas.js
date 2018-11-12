@@ -20,6 +20,8 @@ import {
   fetchUsersFailed,
   userLoginSuccessed,
   userLoginFailed,
+  userReconnectSuccessed,
+  userReconnectFailed,
   userCreateSuccessed,
   userCreateFailed,
   userLogoutSuccessed,
@@ -49,7 +51,7 @@ import {
 } from '../../firebase/userFunctions';
 import {
   addUserToDb,
-  fetchUsers
+  fetchUsers,
 } from '../../firebase/databaseFunctions';
 
 export function* fetchUsersSaga() {
@@ -105,7 +107,7 @@ export function* userDeleteSaga() {
 
 export function* userUpdateSaga(action) {
   try {
-    const updateResponse = yield call(updateProfile, ...action.payload);
+    const updateResponse = yield call(updateProfile, action.payload);
     yield put(userUpdateSuccessed(updateResponse));
     yield put(push('/user'));
   } catch (error) {
@@ -119,7 +121,19 @@ export function* updateEmailSaga({ payload }) {
     yield put(updateEmailSuccessed(updateRes));
     yield put(push('/user'));
   } catch (error) {
-    yield put(updateEmailFailed(error.message));
+    yield put(updateEmailFailed(error));
+
+
+    if ( error.code === 'auth/requires-recent-login') {
+      try {
+        const reAuthRes =  yield call(reAuth);
+        yield put(userReconnectSuccessed(reAuthRes));
+        const updateRes = yield call(updateEmail, payload);
+        yield put(updateEmailSuccessed(updateRes));
+      } catch (error) {
+        yield put(updateEmailFailed(error));
+      }
+    }
   }
 }
 

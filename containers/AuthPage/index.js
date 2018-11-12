@@ -9,7 +9,9 @@ import {
 } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { userCreateRequest } from '../../redux/users/actions';
-import { BackBtn } from '../../components/BackBtn';
+import { Nav } from '../Nav';
+
+import { theme } from '../../theme';
 
 class Page extends React.Component {
   state = {
@@ -34,63 +36,52 @@ class Page extends React.Component {
     const { logged, email } = this.props.user;
     return (
       <View style={styles.container}>
-        <BackBtn />
-        <TextInput
-          style={styles.textinput}
-          onChangeText={(text) => this.setState({userLogin: text})}
-          value={userLogin}
-          placeholder='enter email'
-          textContentType="emailAddress"
-        />
-        <TextInput
-          style={styles.textinput}
-          textContentType="password"
-          onChangeText={(text) => this.setState({userPassword: text})}
-          value={userPassword}
-          placeholder='enter password'
-        />
-        <TouchableOpacity
-          style={styles.btn}
-          onPress={this.userAuth}
-          disabled={!userLogin && !userPassword}
-        >
-          <Text style={styles.btnText}>
+        <View style={styles.header}>
+          <Text style={styles.title}>
             Auth
           </Text>
-        </TouchableOpacity>
+        </View>
+        <View style={styles.main}>
+          <View style={styles.form}>
+            <TextInput
+              style={styles.textinput}
+              onChangeText={(text) => this.setState({userLogin: text})}
+              value={userLogin}
+              placeholder='enter email'
+              textContentType="emailAddress"
+              keyboardType="email-address"
+              autoCapitalize="none"
+            />
+            <TextInput
+              style={styles.textinput}
+              textContentType="password"
+              onChangeText={(text) => this.setState({userPassword: text})}
+              value={userPassword}
+              placeholder='enter password'
+              secureTextEntry
+              autoCapitalize="none"
+            />
+            <TouchableOpacity
+              style={styles.formBtn}
+              onPress={this.userAuth}
+              disabled={!userLogin && !userPassword}
+            >
+              <Text style={styles.formBtnText}>
+                Auth
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        <View style={styles.menu}>
+          <Nav />
+        </View>
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'rgb(40, 44, 52)',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 40
-  },
-  textinput: {
-    height: 40,
-    borderRadius: 4,
-    backgroundColor: '#f0f0f0',
-    padding: 4,
-    borderWidth: 1,
-    width: 200,
-    marginBottom: 20
-  },
-  btn: {
-    backgroundColor: '#61dafb',
-    borderRadius: 4,
-    padding: 10,
-    width: 200,
-  },
-  btnText: {
-    textAlign: 'center',
-    color: '#fff',
-    fontSize: 16
-  }
+  ...theme
 });
 
 export const AuthPage = connect(

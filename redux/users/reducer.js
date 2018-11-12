@@ -72,7 +72,7 @@ const userUpdateRequest = () => assoc('userFetching', true);
 const userUpdateSuccessed = updateResponse => pipe(
   assoc('userFetching', false),
   assoc('displayName', updateResponse.profileName),
-  assoc('photoURL', updateResponse.profileImg),
+  assoc('photoURL', updateResponse.profileUrl),
 );
 const userUpdateFailed = error => pipe(
   assoc('userFetching', false),
