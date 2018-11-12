@@ -36,10 +36,15 @@ class Page extends React.Component {
             </Text>
           </View>
           <View style={styles.main}>
-            <View>
-              <UserProfile {...this.props.user} onLogout={() => {this.props.userLogoutRequest()}} />
+              {
+                logged ? 
+                  <UserProfile {...this.props.user} onLogout={() => {this.props.userLogoutRequest()}} />
+                : null
+              }
               <View style={styles.box}>
-                <Text style={styles.text}>{this.props.user.email}</Text>
+                <Text style={styles.text}>
+                  {this.props.user.email}
+                </Text>
                 <View style={styles.buttons}>
                   <TouchableOpacity
                     style={styles.button}
@@ -74,7 +79,6 @@ class Page extends React.Component {
                     </Text>
                   </TouchableOpacity>
                 </View>
-              </View>
             </View>
           </View>
           <View style={styles.menu}>
@@ -89,8 +93,7 @@ const styles = StyleSheet.create({
   ...theme,
   box: {
     width: 300,
-    alignItems: 'center',
-    justifyContent: 'center'
+    flex: 9,
   },
   button: {
     borderRadius: 4,
@@ -110,7 +113,10 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     width: 300,
     height: 100
-  }
+  },
+  text: {
+    color: '#fff'
+  },
 });
 
 export const UserPage = connect(

@@ -14,27 +14,23 @@ export class UserProfile extends React.Component {
     const img = {uri: photoURL || 'https://www.gstatic.com/mobilesdk/160503_mobilesdk/logo/2x/firebase_28dp.png'};
     return (
       <View style={styles.container}>
-        {
-          logged ?
-          <View style={styles.userProfile}>
-            <View style={styles.imgContainer}>
-              <Image style={styles.userPhoto} source={img} />
-            </View>
-            <View style={styles.userInfo}>
-              <Link to="/user">
-                <Text style={styles.userTitle}>
-                  {displayName || email}
-                </Text>
-              </Link>
-              <TouchableOpacity style={styles.smBtn} onPress={() => {this.props.onLogout()}}>
-                <Text style={styles.smBtnText}>
-                  Logout
-                </Text>
-              </TouchableOpacity>
-            </View>
+        <View style={styles.userProfile}>
+          <View style={styles.imgContainer}>
+            <Image style={styles.userPhoto} source={img} />
           </View>
-          : null
-        }
+          <View style={styles.userInfo}>
+            <Link to="/user">
+              <Text style={styles.userTitle}>
+                {displayName || email}
+              </Text>
+            </Link>
+            <TouchableOpacity style={styles.smBtn} onPress={() => {this.props.onLogout()}}>
+              <Text style={styles.smBtnText}>
+                Logout
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
     );
   }

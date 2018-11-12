@@ -60,6 +60,5 @@ export const NewIssuePage = connect(
   dispatch => ({
     createIssueRequest: bindActionCreators(createIssueRequest, dispatch),
     fetchUsersRequest: bindActionCreators(fetchUsersRequest, dispatch),
-
   })
 )(Page);
