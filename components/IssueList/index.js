@@ -1,62 +1,56 @@
 import React from 'react';
 import {
-  StyleSheet,
   Text,
   View,
   FlatList,
   TouchableOpacity
 } from 'react-native';
+import styled from 'styled-components/native';
 import { Link } from "react-router-native";
+
+const List = styled.View`
+  background-color: rgb(40, 44, 52);
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+`;
+
+const StyledFlatList = styled.FlatList`
+  padding: 20px;
+`;
+
+const ListItem = styled.TouchableOpacity`
+  background-color: #f0f0f0;
+  height: 40px;
+  border-radius: 4px;
+  width: 250px;
+  justify-content: center;
+  padding: 10px;
+  margin-bottom: 10px;
+`;
 
 export class IssueList extends React.Component {
   render() {
     const { issues } = this.props;
     return (
-      <View style={styles.container}>
-        <FlatList
+      <List>
+        <StyledFlatList
           data={issues}
-          style={styles.list}
           renderItem={({item}) =>
-          <TouchableOpacity
+          <ListItem
             onPress={() => {
               this.props.onGetIssue(item.issueId)
             }}
-            style={styles.listItem}
           >
             <Text
-              style={styles.listItemText}
               key={item.issueId}
             >
               {item.title}
             </Text>
-          </TouchableOpacity>}
+          </ListItem>}
           keyExtractor={(item, index) => index.toString()}
         />
-      </View>
+      </List>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'rgb(40, 44, 52)',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  list: {
-    padding: 20,
-  },
-  listItem: {
-    backgroundColor: '#f0f0f0',
-    height: 40,
-    borderRadius: 4,
-    width: 250,
-    justifyContent: 'center',
-    padding: 10,
-    marginBottom: 10
-  },
-  listItemText: {
-    color: '#000'
-  }
-});

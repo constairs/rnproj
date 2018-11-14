@@ -22,7 +22,8 @@
     "redux": "^4.0.1",
     "redux-persist": "^5.10.0",
     "redux-saga": "^0.16.2",
-    "remotedev-server": "^0.2.6"
+    "remotedev-server": "^0.2.6",
+    "styled-components": "^4.1.1"
   },
   "devDependencies": {
     "babel-jest": "23.6.0",

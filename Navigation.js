@@ -1,7 +1,8 @@
 import React from 'react';
-import { StyleSheet, View} from 'react-native';
+import { View} from 'react-native';
 import { Route } from "react-router-native";
 import { ConnectedRouter } from 'connected-react-router';
+import styled from 'styled-components';
 import { AuthPage } from './containers/AuthPage';
 import { LoginPage } from './containers/LoginPage';
 import { UserPage } from './containers/UserPage';
@@ -17,10 +18,14 @@ import { IssuePage } from './containers/IssuePage';
 import { EditIssuePage } from './containers/EditIssuePage';
 import { history } from './redux/store';
 
+const Container = styled.View`
+  flex: 1;
+  background-color: rgb(40, 44, 52);
+`;
 
 export const Navigation = () => (
   <ConnectedRouter history={history}>
-    <View style={styles.container}>
+    <Container>
       <Route exact path="/" component={StartPage} />
       <Route exact path="/auth" component={AuthPage} />
       <Route exact path="/login" component={LoginPage} />
@@ -35,14 +40,7 @@ export const Navigation = () => (
       <Route exact path="/my_issues/issue/" component={IssuePage} />
       <Route exact path="/my_issues/issue/edit" component={EditIssuePage} />
       <Route exact path="/issues/issue" component={IssuePage} />
-    </View>
+    </Container>
   </ConnectedRouter>
 );
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'rgb(40, 44, 52)',
-    flexDirection: 'column',
-  }
-});

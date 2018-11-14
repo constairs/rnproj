@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import {
-  StyleSheet,
   TextInput,
   Text,
   View,
@@ -18,7 +17,12 @@ import {
   fetchUsersRequest
 } from '../../redux/users/actions';
 import { history } from '../../redux/store';
-import { theme } from '../../theme';
+
+import { Header } from '../../components/UI/Header';
+import { HeaderTitle } from '../../components/UI/HeaderTitle';
+import { Main } from '../../components/UI/Main';
+import { BottomMenu } from '../../components/UI/BottomMenu';
+import { KeyboardAvoidingContainer  } from '../../components/UI/KeyboardAvoidingContainer';
 
 class Page extends React.Component {
   state = {
@@ -63,26 +67,26 @@ class Page extends React.Component {
     } = this.state;
 
     return (
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.title}>
+      <KeyboardAvoidingContainer>
+        <Header>
+          <HeaderTitle>
             Edit issue
-          </Text>
-        </View>
-        <View style={styles.main}>
-          <IssueForm users={this.props.users} {...this.props.currentIssue} onSubmitForm={this.editIssue} />
-        </View>
-        <View style={styles.menu}>
+          </HeaderTitle>
+        </Header>
+        <Main>
+          <IssueForm
+            users={this.props.users}
+            {...this.props.currentIssue}
+            onSubmitForm={this.editIssue}
+          />
+        </Main>
+        <BottomMenu>
           <Nav />
-        </View>
-      </View>
+        </BottomMenu>
+      </KeyboardAvoidingContainer>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  ...theme
-});
 
 export const EditIssuePage = connect(
   state => ({

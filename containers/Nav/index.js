@@ -1,79 +1,73 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { StyleSheet, Text, View, TouchableHighlight} from 'react-native';
+import { Text, View, TouchableHighlight } from 'react-native';
 import { Link } from "react-router-native";
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import styled from 'styled-components/native';
+
+const Navigation = styled.View`
+  background-color: #fff;
+  height: 40px;
+  justify-content: space-around;
+  flex-direction: row;
+  flex: 1;
+`;
+
+const NavItem = styled.View`
+  flex: 1;
+`;
+
+const NavLinkText = styled.Text`
+  color: #000;
+  fontSize: 16px;
+  height: 40px;
+  line-height: 40px;
+  text-align-vertical: center;
+  text-align: center;
+`;
 
 class N extends React.Component {
   render () {
     const { logged } = this.props.user;
     return(
-      <View style={styles.nav}>
-        <View style={styles.navItem}>
+      <Navigation>
+        <NavItem>
           <Link to="/">
-            <Text
-              style={styles.navLink}>
-                Home
-            </Text>
+            <NavLinkText>Home</NavLinkText>
           </Link>
-        </View>
+        </NavItem>
         {
           logged ? (
-          <View style={styles.navItem}>
+          <NavItem>
             <Link to="/issues/new">
-              <Text style={styles.navLink}>New</Text>
+              <NavLinkText>New</NavLinkText>
             </Link>
-          </View>
+          </NavItem>
           ) : null
         }
         {
           logged ? (
-          <View style={styles.navItem}>
+          <NavItem>
             <Link to="/issues">
-              <Text style={styles.navLink}>Issues</Text>
+              <NavLinkText>Issues</NavLinkText>
             </Link>
-          </View>
+          </NavItem>
           ) : null
         }
         {
           logged ? (
-          <View style={styles.navItem}>
+          <NavItem>
             <Link to="/my_issues">
-              <Text style={styles.navLink}>My</Text>
+              <NavLinkText>My</NavLinkText>
             </Link>
-          </View>
+          </NavItem>
           ) : null
         }
-      </View>
+      </Navigation>
     );
   }
-
 }
 
 export const Nav = connect(
   state => ({ user: state.users })
 )(N);
-
-const styles = StyleSheet.create({
-  nav: {
-    backgroundColor: '#fff',
-    height: 40,
-    justifyContent: 'space-around',
-    flexDirection: 'row',
-    flex: 1
-  },
-  navItem: {
-    flex: 1
-  },
-  navLink: {
-    color: '#000',
-    fontSize: 16,
-    height: 40,
-    lineHeight: 40,
-    textAlignVertical: 'center',
-    textAlign: 'center'
-  },
-  pressedNavLink: {
-    color: '#fff'
-  }
-});

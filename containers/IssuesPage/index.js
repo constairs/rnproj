@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import {
-  StyleSheet,
   Text,
   View,
   TouchableOpacity
@@ -18,7 +17,12 @@ import {
   fetchUsersRequest
 } from '../../redux/users/actions';
 import { history } from '../../redux/store';
-import { theme } from '../../theme';
+
+import { Container } from '../../components/UI/Container';
+import { Header } from '../../components/UI/Header';
+import { HeaderTitle } from '../../components/UI/HeaderTitle';
+import { Main } from '../../components/UI/Main';
+import { BottomMenu } from '../../components/UI/BottomMenu';
 
 class Page extends React.Component {
   componentDidMount() {
@@ -37,29 +41,23 @@ class Page extends React.Component {
     const { issues } = this.props.issues;
 
     return (
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.title}>
-            Issues
-          </Text>
-        </View>
-        <View style={styles.main}>
+      <Container>
+        <Header>
+          <HeaderTitle>Issues</HeaderTitle>
+        </Header>
+        <Main>
           <IssueList
             onGetIssue={this.getIssue}
             issues={issues}
           />
-        </View>
-        <View style={styles.menu}>
+        </Main>
+        <BottomMenu>
           <Nav />
-        </View>
-      </View>
+        </BottomMenu>
+      </Container>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  ...theme
-});
 
 export const IssuesPage = connect(
   state => ({

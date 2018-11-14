@@ -1,13 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import {
-  StyleSheet,
   Text,
   View,
   TouchableOpacity
 } from 'react-native';
 import { bindActionCreators } from 'redux';
+import styled from 'styled-components';
 import moment from 'moment';
+import { colors } from '../../theme';
 import { Nav } from '../Nav';
 import {
   fetchUsersRequest,
@@ -17,7 +18,37 @@ import {
   deleteIssueRequest
 } from '../../redux/issues/actions';
 import { history } from '../../redux/store';
-import { theme } from '../../theme'
+
+import { Container } from '../../components/UI/Container';
+import { Header } from '../../components/UI/Header';
+import { HeaderTitle } from '../../components/UI/HeaderTitle';
+import { Main } from '../../components/UI/Main';
+import { BottomMenu } from '../../components/UI/BottomMenu';
+import { StyledButton, ButtonText } from '../../components/UI/StyledButton';
+import { StyledText } from '../../components/UI/StyledText';
+
+const Buttons = styled.View`
+  flex-direction: row;
+`;
+
+const IssueButton = styled(StyledButton)`
+  margin-right: 20px;
+`;
+
+const IssueInfo = styled.View`
+  margin-bottom: 15px;
+`;
+
+const IssueDate = styled.Text`
+  font-size: 18px;
+  color: ${colors.light};
+`;
+
+const IssueTitle = styled.Text`
+  font-size: 24px;
+  font-weight: bold;
+  color: ${colors.light};
+`;
 
 class Page extends React.Component {
 
@@ -37,56 +68,49 @@ class Page extends React.Component {
     const { currentIssue } = this.props.issues;
 
     return (
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.title}>Issue</Text>
-        </View>
-        <View style={styles.main}>
-          
-          <View style={styles.issueBox}>
-
-            <View style={styles.issueInfo}>
-              <Text style={styles.issueDate}>
+      <Container>
+        <Header>
+          <HeaderTitle>Issue</HeaderTitle>
+        </Header>
+        <Main>  
+          <View>
+            <IssueInfo>
+              <IssueDate>
                 {
                   moment(currentIssue.createdAt).format('LLL')
                 }
-              </Text>
-              <Text style={styles.issueTitle}>
+              </IssueDate>
+              <IssueTitle>
                 {currentIssue.title}
-              </Text>
-              <Text style={styles.text}>
+              </IssueTitle>
+              <StyledText>
                 {currentIssue.description}
-              </Text>
-            </View>
+              </StyledText>
+            </IssueInfo>
             {
               currentIssue.owner ===  this.props.users.email.split('@')[0] ?
-              (<View style={styles.buttons}>
-                 <TouchableOpacity style={styles.button} onPress={this.editIssue}>
-                  <Text style={styles.buttonText}>
+              (<Buttons>
+                 <IssueButton onPress={this.editIssue}>
+                  <ButtonText>
                     Edit
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.button} onPress={this.deleteIssue}>
-                  <Text style={styles.buttonText}>
+                  </ButtonText>
+                </IssueButton>
+                <IssueButton onPress={this.deleteIssue}>
+                  <ButtonText>
                     Delete
-                  </Text>
-                </TouchableOpacity>
-              </View>) : null
+                  </ButtonText>
+                </IssueButton>
+              </Buttons>) : null
             }
           </View>
-
-        </View>
-        <View style={styles.menu}>
+        </Main>
+        <BottomMenu>
           <Nav />
-        </View>
-      </View>
+        </BottomMenu>
+      </Container>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  ...theme
-});
 
 export const IssuePage = connect(
   state => ({

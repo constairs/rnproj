@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import {
-  StyleSheet,
   TextInput,
   Text,
   View,
@@ -9,12 +8,27 @@ import {
   KeyboardAvoidingView
 } from 'react-native';
 import { bindActionCreators } from 'redux';
+import styled from 'styled-components';
 import {
   userLoginRequest
 } from '../../redux/users/actions';
 import { history } from '../../redux/store';
 import { Nav } from '../Nav';
-import { theme } from '../../theme';
+
+import { Container } from '../../components/UI/Container';
+import { Header } from '../../components/UI/Header';
+import { HeaderTitle } from '../../components/UI/HeaderTitle';
+import { Main } from '../../components/UI/Main';
+import { BottomMenu } from '../../components/UI/BottomMenu';
+import { FormButton, FormButtonText } from '../../components/UI/FormButton';
+import { StyledTextInput } from '../../components/UI/StyledTextInput';
+import { Form } from '../../components/UI/Form';
+import { FormLink, FormLinkText } from '../../components/UI/FormLink';
+import { KeyboardAvoidingContainer  } from '../../components/UI/KeyboardAvoidingContainer';
+
+const FormTextInput = styled(StyledTextInput)`
+  margin-bottom: 30px;
+`;
 
 class Page extends React.Component {
   state = {
@@ -38,17 +52,15 @@ class Page extends React.Component {
     const { userLogin, userPassword } = this.state;
     const { logged, email } = this.props.user;
     return (
-      <View style={styles.container}>
-        <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
-        <View style={styles.header}>
-          <Text style={styles.title}>
+      <KeyboardAvoidingContainer behavior="padding" enabled>
+        <Header>
+          <HeaderTitle>
             Login
-          </Text>
-        </View>
-        <View style={styles.main}>
-          <View style={styles.form}>
-            <TextInput
-              style={styles.textinput}
+          </HeaderTitle>
+        </Header>
+        <Main>
+          <Form>
+            <FormTextInput
               onChangeText={(text) => this.setState({userLogin: text})}
               value={userLogin}
               placeholder='enter email'
@@ -56,42 +68,35 @@ class Page extends React.Component {
               keyboardType="email-address"
               autoCapitalize="none"
             />
-            <TextInput
-              style={styles.textinput}
+            <FormTextInput
               textContentType="password"
               onChangeText={(text) => this.setState({userPassword: text})}
               value={userPassword}
               placeholder='enter password'
               secureTextEntry
             />
-            <TouchableOpacity style={styles.formLink} onPress={() => {history.push('/passwordReset')}}>
-              <Text style={styles.formLinkText}>
-                Forget password?
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.formBtn}
+            <FormLink onPress={() => {history.push('/passwordReset')}}>
+              <FormLinkText>
+                Forgot password?
+              </FormLinkText>
+            </FormLink>
+            <FormButton
               onPress={this.userLogin}
               disabled={!userLogin && !userPassword}
             >
-              <Text style={styles.formBtnText}>
+              <FormButtonText disabled={!userLogin && !userPassword}>
                 Login
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-        <View style={styles.menu}>
+              </FormButtonText>
+            </FormButton>
+          </Form>
+        </Main>
+        <BottomMenu>
           <Nav />
-        </View>
-        </KeyboardAvoidingView>
-      </View>
+        </BottomMenu>
+        </KeyboardAvoidingContainer>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  ...theme
-});
 
 export const LoginPage = connect(
   state => ({ user: state.users }),

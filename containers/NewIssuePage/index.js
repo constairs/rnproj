@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import {
-  StyleSheet,
   TextInput,
   Text,
   View,
@@ -18,7 +17,12 @@ import {
 } from '../../redux/users/actions';
 import { history } from '../../redux/store';
 import { IssueForm } from '../../components/IssueForm';
-import { theme } from '../../theme';
+
+import { Header } from '../../components/UI/Header';
+import { HeaderTitle } from '../../components/UI/HeaderTitle';
+import { Main } from '../../components/UI/Main';
+import { BottomMenu } from '../../components/UI/BottomMenu';
+import { KeyboardAvoidingContainer  } from '../../components/UI/KeyboardAvoidingContainer';
 
 class Page extends React.Component {
   componentDidMount() {
@@ -34,26 +38,22 @@ class Page extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.title}>
+      <KeyboardAvoidingContainer>
+        <Header>
+          <HeaderTitle>
             Create new issue
-          </Text>
-        </View>
-        <View style={styles.main}>
+          </HeaderTitle>
+        </Header>
+        <Main>
           <IssueForm users={this.props.users} onSubmitForm={this.editIssue} />
-        </View>
-        <View style={styles.menu}>
+        </Main>
+        <BottomMenu>
           <Nav />
-        </View>
-      </View>
+        </BottomMenu>
+      </KeyboardAvoidingContainer>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  ...theme
-});
 
 export const NewIssuePage = connect(
   state => ({ users: state.users }),

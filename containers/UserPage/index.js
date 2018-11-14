@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import {
-  StyleSheet,
   TextInput,
   Text,
   View,
@@ -10,6 +9,7 @@ import {
   TouchableOpacity
 } from 'react-native';
 import { bindActionCreators } from 'redux';
+import styled from 'styled-components';
 import { UserProfile } from '../../components/UserProfile';
 import { Nav } from '../Nav';
 import {
@@ -18,7 +18,27 @@ import {
   userDeleteRequest
 } from '../../redux/users/actions';
 import { history } from '../../redux/store';
-import { theme } from '../../theme';
+
+import { Container } from '../../components/UI/Container';
+import { Header } from '../../components/UI/Header';
+import { HeaderTitle } from '../../components/UI/HeaderTitle';
+import { Main } from '../../components/UI/Main';
+import { BottomMenu } from '../../components/UI/BottomMenu';
+import { StyledButton, ButtonText } from '../../components/UI/StyledButton';
+
+const Buttons = styled.View`
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 300px;
+  flex: 9;
+`;
+
+const ProfileButton = styled(StyledButton)`
+  width: 45%;
+  margin-right: 2.5%;
+  margin-left: 2.5%;
+  margin-bottom: 15px;
+`;
 
 class Page extends React.Component {
   render() {
@@ -29,95 +49,48 @@ class Page extends React.Component {
     } = this.props.user;
     const img = {uri: photoURL || 'https://www.gstatic.com/mobilesdk/160503_mobilesdk/logo/2x/firebase_28dp.png'};
     return (
-        <View style={styles.container}>
-          <View style={styles.header}>
-            <Text style={styles.title}>
+        <Container>
+          <Header>
+            <HeaderTitle>
               {this.props.user.displayName || 'User Profile'}
-            </Text>
-          </View>
-          <View style={styles.main}>
-              {
-                logged ? 
-                  <UserProfile {...this.props.user} onLogout={() => {this.props.userLogoutRequest()}} />
-                : null
-              }
-              <View style={styles.box}>
-                <Text style={styles.text}>
-                  {this.props.user.email}
-                </Text>
-                <View style={styles.buttons}>
-                  <TouchableOpacity
-                    style={styles.button}
-                    onPress={() => {history.push('/profileUpdate')}}
-                  >
-                    <Text style={styles.buttonText}>
-                      Update Profile
-                    </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={styles.button}
-                    onPress={() => {this.props.userDeleteRequest()}}
-                  >
-                    <Text style={styles.buttonText}>
-                      Delete Profile
-                    </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={styles.button}
-                    onPress={() => {history.push('/emailUpdate')}}
-                  >
-                    <Text style={styles.buttonText}>
-                      Update Email
-                    </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={styles.button}
-                    onPress={() => {history.push('/passwordUpdate')}}
-                  >
-                    <Text style={styles.buttonText}>
-                      Update Password
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-            </View>
-          </View>
-          <View style={styles.menu}>
+            </HeaderTitle>
+          </Header>
+          <Main>
+            {
+              logged ? 
+                <UserProfile {...this.props.user} onLogout={() => {this.props.userLogoutRequest()}} />
+              : null
+            }
+            <Buttons>
+              <ProfileButton
+                onPress={() => {history.push('/profileUpdate')}}
+              >
+                <ButtonText>Update Profile</ButtonText>
+              </ProfileButton>
+              <ProfileButton
+                onPress={() => {this.props.userDeleteRequest()}}
+              >
+                <ButtonText>Delete Profile</ButtonText>
+              </ProfileButton>
+              <ProfileButton
+                onPress={() => {history.push('/emailUpdate')}}
+              >
+                <ButtonText>Update Email</ButtonText>
+              </ProfileButton>
+              <ProfileButton
+                onPress={() => {history.push('/passwordUpdate')}}
+              >
+                <ButtonText>Update Password</ButtonText>
+              </ProfileButton>
+            </Buttons>
+          </Main>
+          <BottomMenu>
             <Nav />
-          </View>
-      </View>
+          </BottomMenu>
+      </Container>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  ...theme,
-  box: {
-    width: 300,
-    flex: 9,
-  },
-  button: {
-    borderRadius: 4,
-    backgroundColor: '#61dafb',
-    height: 36,
-    padding: 10,
-    width: 140,
-    marginBottom: 10,
-    marginRight: 10
-  },
-  buttonText: {
-    color: '#fff',
-    textAlign: 'center',
-  },
-  buttons: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    width: 300,
-    height: 100
-  },
-  text: {
-    color: '#fff'
-  },
-});
 
 export const UserPage = connect(
   state => ({ user: state.users }),

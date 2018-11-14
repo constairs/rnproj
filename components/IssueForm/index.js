@@ -1,12 +1,27 @@
 import React from 'react';
 import {
-  StyleSheet,
   TextInput,
   Text,
   View,
   Picker,
+  Item,
   TouchableOpacity
 } from 'react-native';
+import styled from 'styled-components';
+
+import { Header } from '../../components/UI/Header';
+import { HeaderTitle } from '../../components/UI/HeaderTitle';
+import { Main } from '../../components/UI/Main';
+import { BottomMenu } from '../../components/UI/BottomMenu';
+import { FormButton, FormButtonText } from '../../components/UI/FormButton';
+import { StyledTextInput } from '../../components/UI/StyledTextInput';
+import { Form } from '../../components/UI/Form';
+import { KeyboardAvoidingContainer  } from '../../components/UI/KeyboardAvoidingContainer';
+import { StyledPicker } from '../../components/UI/StyledPicker';
+
+const FormTextInput = styled(StyledTextInput)`
+  margin-bottom: 20px;
+`;
 
 export class IssueForm extends React.Component {
   constructor(props) {
@@ -38,14 +53,13 @@ export class IssueForm extends React.Component {
 
   renderPickerItems() {
     return this.props.users.users.map((item) => {
-        return (
-          <Picker.Item
-            label={item}
-            value={item}
-            key={item}
-            style={styles.pickerItem}
-          />
-        );
+      return (
+        <Item
+          label={item}
+          value={item}
+          key={item}
+        />
+      );
     });
   }
 
@@ -60,74 +74,31 @@ export class IssueForm extends React.Component {
     } = this.state;
 
     return (
-      <View style={styles.form}>
-        <TextInput
-          style={styles.textinput}
+      <Form>
+        <FormTextInput
           onChangeText={(text) => this.setState({issueTitle: text})}
           value={issueTitle}
           placeholder='enter title'
         />
-        <TextInput
-          style={styles.textinput}
+        <FormTextInput
           onChangeText={(text) => this.setState({issueDescription: text})}
           value={issueDescription}
           placeholder='enter description'
         />
-        <Picker
+        <StyledPicker
           selectedValue={issueFor}
-          style={styles.picker}
           value={issueFor}
-          itemStyle={styles.pickerItem}
           onValueChange={(itemValue, itemIndex) => this.setState({issueFor: itemValue})}>
           {this.renderPickerItems()}
-        </Picker>
-        <TouchableOpacity
-          style={styles.btn}
+        </StyledPicker>
+        <FormButton
           onPress={this.submitForm}
         >
-          <Text style={styles.btnText}>
+          <FormButtonText>
             { this.props.issueId ? 'Edit' : 'Create' } issue
-          </Text>
-        </TouchableOpacity>
-      </View>
+          </FormButtonText>
+        </FormButton>
+      </Form>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  form: {
-    height: 260
-  },
-  textinput: {
-    height: 40,
-    borderRadius: 4,
-    backgroundColor: '#f0f0f0',
-    padding: 4,
-    borderWidth: 1,
-    width: 200,
-    marginBottom: 20
-  },
-  picker: {
-    width: 200,
-    // backgroundColor: '#f0f0f0',
-    // borderRadius: 4,
-    // padding: 4,
-    // borderWidth: 1,
-    // marginBottom: 20,
-  },
-  pickerItem: {
-    // height: 40,
-    color: '#ffffff'
-  },
-  btn: {
-    backgroundColor: '#61dafb',
-    borderRadius: 4,
-    padding: 10,
-    width: 200,
-  },
-  btnText: {
-    textAlign: 'center',
-    color: '#fff',
-    fontSize: 16
-  },
-});
