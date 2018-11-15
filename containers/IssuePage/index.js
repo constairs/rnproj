@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import {
   Text,
   View,
-  TouchableOpacity
+  TouchableOpacity,
+  ActivityIndicator
 } from 'react-native';
 import { bindActionCreators } from 'redux';
 import styled from 'styled-components';
@@ -65,44 +66,50 @@ class Page extends React.Component {
   }
 
   render() {
-    const { currentIssue } = this.props.issues;
+    const { currentIssue, issueFetching } = this.props.issues;
 
     return (
       <Container>
         <Header>
           <HeaderTitle>Issue</HeaderTitle>
         </Header>
-        <Main>  
-          <View>
-            <IssueInfo>
-              <IssueDate>
+        <Main>
+          {
+            issueFetching ? (
+              <ActivityIndicator size="large" color={colors.accent} />
+            ) : (
+              <View>
+                <IssueInfo>
+                  <IssueDate>
+                    {
+                      moment(currentIssue.createdAt).format('LLL')
+                    }
+                  </IssueDate>
+                  <IssueTitle>
+                    {currentIssue.title}
+                  </IssueTitle>
+                  <StyledText>
+                    {currentIssue.description}
+                  </StyledText>
+                </IssueInfo>
                 {
-                  moment(currentIssue.createdAt).format('LLL')
+                  currentIssue.owner ===  this.props.users.email.split('@')[0] ?
+                  (<Buttons>
+                    <IssueButton onPress={this.editIssue}>
+                      <ButtonText>
+                        Edit
+                      </ButtonText>
+                    </IssueButton>
+                    <IssueButton onPress={this.deleteIssue}>
+                      <ButtonText>
+                        Delete
+                      </ButtonText>
+                    </IssueButton>
+                  </Buttons>) : null
                 }
-              </IssueDate>
-              <IssueTitle>
-                {currentIssue.title}
-              </IssueTitle>
-              <StyledText>
-                {currentIssue.description}
-              </StyledText>
-            </IssueInfo>
-            {
-              currentIssue.owner ===  this.props.users.email.split('@')[0] ?
-              (<Buttons>
-                 <IssueButton onPress={this.editIssue}>
-                  <ButtonText>
-                    Edit
-                  </ButtonText>
-                </IssueButton>
-                <IssueButton onPress={this.deleteIssue}>
-                  <ButtonText>
-                    Delete
-                  </ButtonText>
-                </IssueButton>
-              </Buttons>) : null
-            }
-          </View>
+              </View>
+            )
+          }
         </Main>
         <BottomMenu>
           <Nav />

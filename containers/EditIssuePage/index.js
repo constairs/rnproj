@@ -5,7 +5,8 @@ import {
   Text,
   View,
   Picker,
-  TouchableOpacity
+  TouchableOpacity,
+  ActivityIndicator
 } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { Nav } from '../Nav';
@@ -17,6 +18,7 @@ import {
   fetchUsersRequest
 } from '../../redux/users/actions';
 import { history } from '../../redux/store';
+import { colors } from '../../theme';
 
 import { Header } from '../../components/UI/Header';
 import { HeaderTitle } from '../../components/UI/HeaderTitle';
@@ -74,11 +76,13 @@ class Page extends React.Component {
           </HeaderTitle>
         </Header>
         <Main>
-          <IssueForm
-            users={this.props.users}
-            {...this.props.currentIssue}
-            onSubmitForm={this.editIssue}
-          />
+          {
+            this.props.issueFetching ? (
+              <ActivityIndicator size="large" color={colors.accent} />
+            ) : (
+              <IssueForm users={this.props.users} onSubmitForm={this.editIssue} />
+            )
+          }
         </Main>
         <BottomMenu>
           <Nav />
@@ -91,7 +95,8 @@ class Page extends React.Component {
 export const EditIssuePage = connect(
   state => ({
     users: state.users,
-    currentIssue: state.issues.currentIssue
+    currentIssue: state.issues.currentIssue,
+    issueFetching: state.issues.issueFetching
   }),
   dispatch => ({
     editIssueRequest: bindActionCreators(editIssueRequest, dispatch),

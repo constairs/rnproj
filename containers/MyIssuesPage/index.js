@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import {
   Text,
   View,
-  TouchableOpacity
+  TouchableOpacity,
+  ActivityIndicator
 } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { Link } from "react-router-native";
@@ -17,6 +18,7 @@ import {
   fetchUsersRequest
 } from '../../redux/users/actions';
 import { history } from '../../redux/store';
+import { colors } from '../../theme';
 
 import { Container } from '../../components/UI/Container';
 import { Header } from '../../components/UI/Header';
@@ -29,6 +31,10 @@ class Page extends React.Component {
     this.props.fetchIssuesRequest({ user: this.props.users.email, forOwner: true });
   }
 
+  refreshIssuesList = () => {
+    this.props.fetchIssuesRequest({ user: this.props.users.email, forOwner: true });
+  }
+
   getIssue = (issueId) => {
     this.props.getIssueRequest({
       user: this.props.users.email,
@@ -38,18 +44,27 @@ class Page extends React.Component {
   }
 
   render() {
-    const { issues } = this.props.issues;
+    const { issues, issuesFetching } = this.props.issues;
 
     return (
       <Container>
         <Header>
-          <HeaderTitle>Issues</HeaderTitle>
+          <HeaderTitle>My Issues</HeaderTitle>
         </Header>
         <Main>
-          <IssueList
-            onGetIssue={this.getIssue}
-            issues={issues}
-          />
+          {
+            issuesFetching ? (
+              <ActivityIndicator size="large" color={colors.accent} />
+            ) : (
+            <IssueList
+              onGetIssue={this.getIssue}
+              onRefreshList={
+                this.refreshIssuesList
+              }
+              issues={issues}
+            />
+            )
+          }
         </Main>
         <BottomMenu>
           <Nav />

@@ -3,7 +3,8 @@ import {
   Text,
   View,
   FlatList,
-  TouchableOpacity
+  TouchableOpacity,
+  RefreshControl
 } from 'react-native';
 import styled from 'styled-components/native';
 import { Link } from "react-router-native";
@@ -30,6 +31,14 @@ const ListItem = styled.TouchableOpacity`
 `;
 
 export class IssueList extends React.Component {
+  state = {
+    refreshing: false
+  }
+
+  _onRefresh = () => {
+    this.props.onRefreshList();
+  }
+
   render() {
     const { issues } = this.props;
     return (
@@ -49,6 +58,12 @@ export class IssueList extends React.Component {
             </Text>
           </ListItem>}
           keyExtractor={(item, index) => index.toString()}
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={this._onRefresh}
+            />
+          }
         />
       </List>
     );

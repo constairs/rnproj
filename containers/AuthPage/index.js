@@ -4,12 +4,14 @@ import {
   TextInput,
   Text,
   View,
-  TouchableOpacity
+  TouchableOpacity,
+  ActivityIndicator
 } from 'react-native';
 import { bindActionCreators } from 'redux';
 import styled from 'styled-components';
 import { userCreateRequest } from '../../redux/users/actions';
 import { Nav } from '../Nav';
+import { colors } from '../../theme';
 
 import { Header } from '../../components/UI/Header';
 import { HeaderTitle } from '../../components/UI/HeaderTitle';
@@ -45,7 +47,7 @@ class Page extends React.Component {
 
   render() {
     const { userLogin, userPassword } = this.state;
-    const { logged, email } = this.props.user;
+    const { logged, email, userFetching } = this.props.user;
     return (
       <KeyboardAvoidingContainer>
         <Header>
@@ -54,32 +56,38 @@ class Page extends React.Component {
           </HeaderTitle>
         </Header>
         <Main>
-          <Form>
-            <FormTextInput
-              onChangeText={(text) => this.setState({userLogin: text})}
-              value={userLogin}
-              placeholder='enter email'
-              textContentType="emailAddress"
-              keyboardType="email-address"
-              autoCapitalize="none"
-            />
-            <FormTextInput
-              textContentType="password"
-              onChangeText={(text) => this.setState({userPassword: text})}
-              value={userPassword}
-              placeholder='enter password'
-              secureTextEntry
-              autoCapitalize="none"
-            />
-            <FormButton
-              onPress={this.userAuth}
-              disabled={!userLogin && !userPassword}
-            >
-              <FormButtonText disabled={!userLogin && !userPassword}>
-                Auth
-              </FormButtonText>
-            </FormButton>
-          </Form>
+        {
+          userFetching ? (
+            <ActivityIndicator size="large" color={colors.accent} />
+          ) : (
+            <Form>
+              <FormTextInput
+                onChangeText={(text) => this.setState({userLogin: text})}
+                value={userLogin}
+                placeholder='enter email'
+                textContentType="emailAddress"
+                keyboardType="email-address"
+                autoCapitalize="none"
+              />
+              <FormTextInput
+                textContentType="password"
+                onChangeText={(text) => this.setState({userPassword: text})}
+                value={userPassword}
+                placeholder='enter password'
+                secureTextEntry
+                autoCapitalize="none"
+              />
+              <FormButton
+                onPress={this.userAuth}
+                disabled={!userLogin && !userPassword}
+              >
+                <FormButtonText disabled={!userLogin && !userPassword}>
+                  Auth
+                </FormButtonText>
+              </FormButton>
+            </Form>
+          )
+        }
         </Main>
         <BottomMenu>
           <Nav />

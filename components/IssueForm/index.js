@@ -6,10 +6,15 @@ import {
   Picker,
   Item,
   Image,
-  TouchableOpacity
+  TouchableOpacity,
+  TouchableHighlight,
+  DatePickerIOS,
+  ScrollView,
+  Switch
 } from 'react-native';
 import styled from 'styled-components';
 import ImagePicker from 'react-native-image-picker';
+import DatePicker from 'react-native-datepicker';
 
 import { Header } from '../../components/UI/Header';
 import { HeaderTitle } from '../../components/UI/HeaderTitle';
@@ -19,11 +24,27 @@ import { StyledButton, ButtonText } from '../../components/UI/StyledButton';
 import { FormButton, FormButtonText } from '../../components/UI/FormButton';
 import { StyledTextInput } from '../../components/UI/StyledTextInput';
 import { Form } from '../../components/UI/Form';
-import { KeyboardAvoidingContainer  } from '../../components/UI/KeyboardAvoidingContainer';
+import { KeyboardAvoidingContainer } from '../../components/UI/KeyboardAvoidingContainer';
+import { Label, LabelText } from '../../components/UI/Label';
+import { BottomFadeView } from '../UI/BottomFadeView';
+import { TouchanbleTextInput, TouchanbleTextInputContent } from '../UI/TouchanbleTextInput';
 
+import { colors } from '../../theme';
 
 const FormTextInput = styled(StyledTextInput)`
-  margin-bottom: 20px;
+  margin-bottom: 0px;
+`;
+
+const ModalContent = styled.View`
+  background-color: rgba(40, 44, 52, .66);
+`;
+
+const DatePickerInput = styled.TouchableOpacity`
+  background-color: ${colors.light};
+  height: 40px;
+  border-radius: 4px;
+  width: 100%;
+  padding: 8px 10px;
 `;
 
 const options = {
@@ -43,7 +64,11 @@ export class IssueForm extends React.Component {
       issueDescription: props.description || '',
       issueFor: props.for || props.users.users[0],
       issueFiles: [],
-      attachedPhoto: ''
+      attachedPhoto: '',
+      deadline: new Date(),
+      isImportant: false,
+      showPicker: false,
+      showDatepicker: false
     }
   }
 
@@ -71,10 +96,32 @@ export class IssueForm extends React.Component {
     });
   }
 
+  setDate = (newDate) => {
+    this.setState({deadline: newDate});
+  }
+
   resetHandler = () => {
     this.setState({
       attachedPhoto: '',
       issueFiles: []
+    });
+  }
+
+  switchHandler = (value) => {
+    this.setState({
+      isImportant: value
+    });
+  }
+
+  setPickerVisible = () => {
+    this.setState({
+      showPicker: !this.state.showPicker,
+    });
+  }
+
+  setDatepickerVisible = () => {
+    this.setState({
+      showDatepicker: !this.state.showDatepicker,
     });
   }
 
@@ -116,37 +163,94 @@ export class IssueForm extends React.Component {
       issueTitle,
       issueDescription,
       issueFor,
-      attachedPhoto
+      attachedPhoto,
+      deadline,
+      isImportant,
+      showPicker,
+      showDatepicker
     } = this.state;
 
     return (
       <Form>
-        <FormTextInput
-          onChangeText={(text) => this.setState({issueTitle: text})}
-          value={issueTitle}
-          placeholder='enter title'
-        />
-        <FormTextInput
-          onChangeText={(text) => this.setState({issueDescription: text})}
-          value={issueDescription}
-          placeholder='enter description'
-        />
-        <Picker
-          selectedValue={issueFor}
-          value={issueFor}
-          onValueChange={(itemValue, itemIndex) => this.setState({issueFor: itemValue})}>
-          {this.renderPickerItems()}
-        </Picker>
+        <ScrollView>
+        <Label>
+          <LabelText>
+            Issue title
+          </LabelText>
+          <FormTextInput
+            onChangeText={(text) => this.setState({issueTitle: text})}
+            value={issueTitle}
+            placeholder='enter title'
+          />
+        </Label>
+        <Label>
+          <LabelText>
+            Issue title
+          </LabelText>
+          <FormTextInput
+            onChangeText={(text) => this.setState({issueDescription: text})}
+            value={issueDescription}
+            placeholder='enter description'
+          />
+        </Label>
+
         <StyledButton onPress={this.pickImageHandler}>
           <ButtonText>
             Attach photo
           </ButtonText>
         </StyledButton>
-        <StyledButton onPress={this.resetHandler}>
-          <ButtonText>
-            Reset
-          </ButtonText>
-        </StyledButton>
+
+        <Label>
+          <LabelText>
+            Important
+          </LabelText>
+          <Switch
+            value={isImportant}
+            onValueChange={this.switchHandler}
+            trackColor={colors.main}
+            thumbColor={colors.main}
+            trackColor={colors.main}
+            ios_backgroundColor={colors.accent}
+          />
+        </Label>
+
+        <Label>
+          <LabelText>
+            For
+          </LabelText>
+          <TouchanbleTextInput onPress={this.setPickerVisible}>
+            <Text>
+              {issueFor}
+            </Text>
+          </TouchanbleTextInput>
+        </Label>
+        <BottomFadeView show={showPicker} onCloseModal={this.setPickerVisible}>
+          <Picker
+            selectedValue={issueFor}
+            value={issueFor}
+            onValueChange={(itemValue, itemIndex) => this.setState({issueFor: itemValue})}>
+            {this.renderPickerItems()}
+          </Picker>
+        </BottomFadeView>
+
+        <Label>
+          <LabelText>
+            Deadline (choose date)
+          </LabelText>
+          <DatePickerInput onPress={this.setDatepickerVisible}>
+            <DatePickerText>
+              {deadline.toDateString()}
+            </DatePickerText>
+          </DatePickerInput>
+        </Label>
+        <BottomFadeView show={showDatepicker} onCloseModal={this.setDatepickerVisible}>
+          <DatePickerIOS
+            date={deadline}
+            onDateChange={this.setDate}
+            locale="en_En"
+          />
+        </BottomFadeView>
+
         {
           attachedPhoto ?
           <Image source={attachedPhoto} />
@@ -159,6 +263,7 @@ export class IssueForm extends React.Component {
             { this.props.issueId ? 'Edit' : 'Create' } issue
           </FormButtonText>
         </FormButton>
+        </ScrollView>
       </Form>
     );
   }

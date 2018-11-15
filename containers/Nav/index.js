@@ -2,7 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Text, View, TouchableHighlight } from 'react-native';
 import { Link } from "react-router-native";
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import { colors } from '../../theme';
+
+import { Icon } from 'react-native-elements'
+
 import styled from 'styled-components/native';
 
 const Navigation = styled.View`
@@ -11,15 +14,21 @@ const Navigation = styled.View`
   justify-content: space-around;
   flex-direction: row;
   flex: 1;
+  padding: 0;
 `;
 
 const NavItem = styled.View`
   flex: 1;
+  height: 40px;
+`;
+
+const StyledLink = styled.View`
+
 `;
 
 const NavLinkText = styled.Text`
   color: #000;
-  fontSize: 16px;
+  font-size: 16px;
   height: 40px;
   line-height: 40px;
   text-align-vertical: center;
@@ -33,14 +42,22 @@ class N extends React.Component {
       <Navigation>
         <NavItem>
           <Link to="/">
-            <NavLinkText>Home</NavLinkText>
+              <Icon
+                name='home'
+                color={colors.main}
+                size={36}
+              />
           </Link>
         </NavItem>
         {
           logged ? (
           <NavItem>
             <Link to="/issues/new">
-              <NavLinkText>New</NavLinkText>
+              <Icon
+                name='add'
+                color={colors.main}
+                size={36}
+              />
             </Link>
           </NavItem>
           ) : null
@@ -49,7 +66,11 @@ class N extends React.Component {
           logged ? (
           <NavItem>
             <Link to="/issues">
-              <NavLinkText>Issues</NavLinkText>
+              <Icon
+                name='list'
+                color={colors.main}
+                size={36}
+              />
             </Link>
           </NavItem>
           ) : null
@@ -58,7 +79,11 @@ class N extends React.Component {
           logged ? (
           <NavItem>
             <Link to="/my_issues">
-              <NavLinkText>My</NavLinkText>
+              <Icon
+                name='list'
+                color={colors.main}
+                size={36}
+              />
             </Link>
           </NavItem>
           ) : null

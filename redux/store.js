@@ -32,6 +32,7 @@ export function configureStore() {
       store.replaceReducer(connectRouter(history)(nextRootReducer));
     });
   }
+
   store.runSaga = sagaMiddleware.run;
   return { store, persistor };
 }
