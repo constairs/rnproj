@@ -19,11 +19,11 @@ import {
   answerIssue
 } from '../../firebase/databaseFunctions';
 
-// import {
-//   uploadFiles,
-//   downloadFiles,
-//   getFileMetadata,
-// } from '../../firebase/storageFunctions';
+import {
+  uploadFiles,
+  downloadFiles,
+  getFileMetadata,
+} from '../../firebase/storageFunctions';
 
 import {
   createIssueSuccessed,
@@ -47,11 +47,9 @@ export function* createIssueSaga(action) {
     if (action.payload.createIssueData.issueFiles.length > 0) {
       const files = action.payload.createIssueData.issueFiles;
 
-      // const uploadTask = yield call(uploadFiles, action.payload.createIssueData.issueFiles);
+      const filesLinks = yield call(uploadFiles, action.payload.createIssueData.issueFiles);
 
       // const filesLinks = uploadTask.snapshot.ref.getDownloadURL();
-
-      // const filesLinks = yield call(uploadFiles, action.payload.createIssueData.issueFiles);
 
       const filesWithLinks = files.map((file, i) =>
         ({
@@ -71,8 +69,8 @@ export function* createIssueSaga(action) {
         filesWithLinks,
       ];
 
-      // const createResponse = yield call(createIssue, ...issueWithFilesLinks);
-      // yield put(createIssueSuccessed(createResponse));
+      const createResponse = yield call(createIssue, ...issueWithFilesLinks);
+      yield put(createIssueSuccessed(createResponse));
       yield put(push('/my_issues'));
     } else {
       const createResponse = yield call(

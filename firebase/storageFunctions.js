@@ -5,7 +5,7 @@ import 'firebase/storage';
 import {
   uploadProgressChanged,
   // uploadPaused,
-  // uploadRunning
+  // uploadRunning,
   // uploadCancel
 } from '../redux/issues/actions';
 import { store } from '../App';
