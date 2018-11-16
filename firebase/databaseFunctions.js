@@ -45,25 +45,51 @@ export function fetchUsers() {
   });
 }
 
-export function createIssue(user, issueId, createdAt, issueTitle, issueDescription, issueFor, createdDate, attachedFiles = []) {
+
+export function createIssue({user, createIssueData}) {
+  // const issueData = {
+  //   issueId: issueId,
+  //   title: issueTitle,
+  //   createdAt: createdAt,
+  //   description: issueDescription,
+  //   for: issueFor,
+  //   attachedFiles: attachedFiles,
+  //   owner: user.split('@')[0],
+  // };
+
   const issueData = {
-    issueId: issueId,
-    title: issueTitle,
-    createdAt: createdAt,
-    description: issueDescription,
-    for: issueFor,
-    attachedFiles: attachedFiles,
+    ...createIssueData.issueInfo,
     owner: user.split('@')[0],
-  };
+  }
 
   return Promise.all([
-    firebase.database().ref('/users/' + issueData.owner + '/myIssues/' + issueId).set(issueData),
-    firebase.database().ref('/users/' + issueFor + '/issues/' + issueId).set(issueData),
+    firebase.database().ref('/users/' + issueData.owner + '/myIssues/' + issueData.issueId).set(issueData),
+    firebase.database().ref('/users/' + issueData.for + '/issues/' + issueData.issueId).set(issueData),
   ]).then(() => {
     return issueData
   })
   .catch((error) => reject(error));
 }
+
+// export function createIssue(user, issueId, createdAt, issueTitle, issueDescription, issueFor, createdDate, attachedFiles = []) {
+//   const issueData = {
+//     issueId: issueId,
+//     title: issueTitle,
+//     createdAt: createdAt,
+//     description: issueDescription,
+//     for: issueFor,
+//     attachedFiles: attachedFiles,
+//     owner: user.split('@')[0],
+//   };
+
+//   return Promise.all([
+//     firebase.database().ref('/users/' + issueData.owner + '/myIssues/' + issueId).set(issueData),
+//     firebase.database().ref('/users/' + issueFor + '/issues/' + issueId).set(issueData),
+//   ]).then(() => {
+//     return issueData
+//   })
+//   .catch((error) => reject(error));
+// }
 
 export function editIssue(user, issueId, createdAt, issueTitle, issueDescription, issueFor, updatedAt, attachedFiles = []) {
 

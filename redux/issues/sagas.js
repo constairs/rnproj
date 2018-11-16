@@ -63,11 +63,17 @@ export function* createIssueSaga(action) {
 
       // const filesWithLinks = yield call(uploadFileSaga, files);
 
-      const issueWithFilesLinks = [
-        action.payload.user,
-        ...action.payload.createIssueData.issueData,
-        filesWithLinks,
-      ];
+      // const issueWithFilesLinks = [
+      //   action.payload.user,
+      //   ...action.payload.createIssueData.issueData,
+      //   filesWithLinks,
+      // ];
+
+      const issueWithFilesLinks = {
+        user: action.payload.user,
+        createIssueData: {...action.payload.createIssueData.issueInfo, attachedFiles: filesWithLinks},
+      };
+
 
       const createResponse = yield call(createIssue, ...issueWithFilesLinks);
       yield put(createIssueSuccessed(createResponse));
@@ -75,10 +81,11 @@ export function* createIssueSaga(action) {
     } else {
       const createResponse = yield call(
         createIssue,
-        ...[
-          action.payload.user,
-          ...action.payload.createIssueData.issueData
-        ]
+        // ...[
+        //   action.payload.user,
+        //   ...action.payload.createIssueData.issueData
+        // ]
+        action.payload
       );
       yield put(createIssueSuccessed(createResponse));
       yield put(push('/my_issues'));

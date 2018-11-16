@@ -3,7 +3,7 @@ import { colors} from '../../theme';
 
 
 export const TouchanbleTextInput = styled.TouchableOpacity`
-  background-color: ${colors.light};
+  background-color: ${props => props.disabled ? '#ccc' : colors.light };
   height: 40px;
   border-radius: 4px;
   width: 100%;
@@ -12,4 +12,5 @@ export const TouchanbleTextInput = styled.TouchableOpacity`
 
 export const TouchanbleTextInputContent = styled.Text`
   font-size: 14px;
+  color: ${props => props.disabled ? '#666' : colors.main };
 `;

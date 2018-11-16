@@ -14,7 +14,6 @@ import {
 } from 'react-native';
 import styled from 'styled-components';
 import ImagePicker from 'react-native-image-picker';
-import DatePicker from 'react-native-datepicker';
 
 import { Header } from '../../components/UI/Header';
 import { HeaderTitle } from '../../components/UI/HeaderTitle';
@@ -28,6 +27,7 @@ import { KeyboardAvoidingContainer } from '../../components/UI/KeyboardAvoidingC
 import { Label, LabelText } from '../../components/UI/Label';
 import { BottomFadeView } from '../UI/BottomFadeView';
 import { TouchanbleTextInput, TouchanbleTextInputContent } from '../UI/TouchanbleTextInput';
+import { FileItem, FileItemImage } from '../../components/UI/FileItem';
 
 import { colors } from '../../theme';
 
@@ -37,6 +37,12 @@ const FormTextInput = styled(StyledTextInput)`
 
 const ModalContent = styled.View`
   background-color: rgba(40, 44, 52, .66);
+`;
+
+const AttachedImages = styled.View`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 `;
 
 const DatePickerInput = styled.TouchableOpacity`
@@ -64,7 +70,7 @@ export class IssueForm extends React.Component {
       issueDescription: props.description || '',
       issueFor: props.for || props.users.users[0],
       issueFiles: [],
-      attachedPhoto: '',
+      switchDeadline: false,
       deadline: new Date(),
       isImportant: false,
       showPicker: false,
@@ -83,14 +89,15 @@ export class IssueForm extends React.Component {
       } else if (response.customButton) {
         console.log('User tapped custom button: ', response.customButton);
       } else {
+        
         const source = { uri: response.uri };
     
         // You can also display the image using data:
         // const source = { uri: 'data:image/jpeg;base64,' + response.data };
     
         this.setState({
-          attachedPhoto: source,
-          issueFiles: [...this.state.issueFiles, source]
+          // attachedPhoto: response,
+          issueFiles: [...this.state.issueFiles, response]
         });
       }
     });
@@ -102,14 +109,7 @@ export class IssueForm extends React.Component {
 
   resetHandler = () => {
     this.setState({
-      attachedPhoto: '',
       issueFiles: []
-    });
-  }
-
-  switchHandler = (value) => {
-    this.setState({
-      isImportant: value
     });
   }
 
@@ -128,16 +128,32 @@ export class IssueForm extends React.Component {
   submitForm = (e) => {
     e.preventDefault();
 
+    // const issueData = {
+    //   issueData: [
+    //     this.props.issueId || `id${(+new Date()).toString(16)}`,
+    //     this.props.createdAt || Date.now(),
+    //     this.state.issueTitle,
+    //     this.state.issueDescription,
+    //     this.state.issueFor,
+    //     switchDeadline ? this.state.deadline : false,
+    //     this.state.isImportant,
+    //     this.props.issueId ? Date.now() : null,
+    //   ],
+    //   issueFiles: []
+    // };
+
     const issueData = {
-      issueData: [
-        this.props.issueId || `id${(+new Date()).toString(16)}`,
-        this.props.createdAt || Date.now(),
-        this.state.issueTitle,
-        this.state.issueDescription,
-        this.state.issueFor,
-        this.props.issueId ? Date.now() : null
-      ],
-      issueFiles: []
+      issueInfo: {
+        issueId: this.props.issueId || `id${(+new Date()).toString(16)}`,
+        createdAt: this.props.createdAt || Date.now(),
+        title: this.state.issueTitle,
+        description: this.state.issueDescription,
+        for: this.state.issueFor,
+        deadline: this.state.switchDeadline ? this.state.deadline : false,
+        important: this.state.isImportant,
+        updatedAt: this.props.issueId ? Date.now() : null,
+      },
+      issueFiles: this.state.issueFiles
     };
 
     this.props.onSubmitForm(issueData);
@@ -155,6 +171,16 @@ export class IssueForm extends React.Component {
     });
   }
 
+  renderImageItems(list) {
+    return list.map(item => (
+      <FileItem key={item}>
+        <FileItemImage 
+          source={{ uri: item.uri }}
+        />
+      </FileItem>
+    ))
+  }
+
   render() {
     const {
       users
@@ -164,10 +190,12 @@ export class IssueForm extends React.Component {
       issueDescription,
       issueFor,
       attachedPhoto,
+      switchDeadline,
       deadline,
       isImportant,
       showPicker,
-      showDatepicker
+      showDatepicker,
+      issueFiles
     } = this.state;
 
     return (
@@ -200,17 +228,26 @@ export class IssueForm extends React.Component {
           </ButtonText>
         </StyledButton>
 
+        {
+          issueFiles.length > 0 ? (
+            <AttachedImages>
+              {
+                this.renderImageItems(issueFiles)
+              }
+            </AttachedImages>
+          ) : null
+        }
+
         <Label>
           <LabelText>
             Important
           </LabelText>
           <Switch
             value={isImportant}
-            onValueChange={this.switchHandler}
-            trackColor={colors.main}
-            thumbColor={colors.main}
-            trackColor={colors.main}
-            ios_backgroundColor={colors.accent}
+            onValueChange={() => {this.setState({isImportant: !isImportant})}}
+            trackColor={colors.accent}
+            thumbColor={colors.light}
+            tintColor={colors.accent}
           />
         </Label>
 
@@ -219,9 +256,9 @@ export class IssueForm extends React.Component {
             For
           </LabelText>
           <TouchanbleTextInput onPress={this.setPickerVisible}>
-            <Text>
+            <TouchanbleTextInputContent>
               {issueFor}
-            </Text>
+            </TouchanbleTextInputContent>
           </TouchanbleTextInput>
         </Label>
         <BottomFadeView show={showPicker} onCloseModal={this.setPickerVisible}>
@@ -235,13 +272,21 @@ export class IssueForm extends React.Component {
 
         <Label>
           <LabelText>
-            Deadline (choose date)
+            Deadline
           </LabelText>
-          <DatePickerInput onPress={this.setDatepickerVisible}>
-            <DatePickerText>
+          <Switch
+            value={switchDeadline}
+            onValueChange={() => {this.setState({switchDeadline: !switchDeadline})}}
+            trackColor={colors.accent}
+            thumbColor={colors.light}
+            // ios_backgroundColor={colors.accent}
+          />
+
+          <TouchanbleTextInput disabled={!switchDeadline} onPress={this.setDatepickerVisible}>
+            <TouchanbleTextInputContent disabled={!switchDeadline}>
               {deadline.toDateString()}
-            </DatePickerText>
-          </DatePickerInput>
+            </TouchanbleTextInputContent>
+          </TouchanbleTextInput>
         </Label>
         <BottomFadeView show={showDatepicker} onCloseModal={this.setDatepickerVisible}>
           <DatePickerIOS
@@ -251,11 +296,6 @@ export class IssueForm extends React.Component {
           />
         </BottomFadeView>
 
-        {
-          attachedPhoto ?
-          <Image source={attachedPhoto} />
-          : null
-        }
         <FormButton
           onPress={this.submitForm}
         >
